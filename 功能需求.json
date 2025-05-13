@@ -1,0 +1,188 @@
+{
+  "user_management": {
+    "account_operations": {
+      "create_account": {
+        "description": "创建新用户账号",
+        "required_fields": ["username", "password", "email"]
+      },
+      "login": {
+        "description": "用户登录",
+        "required_fields": ["username", "password"]
+      },
+      "logout": {
+        "description": "用户登出"
+      },
+      "reset_password": {
+        "description": "重置密码",
+        "required_fields": ["email"]
+      },
+      "modify_info": {
+        "description": "修改用户信息",
+        "fields": ["nickname", "avatar", "email"]
+      },
+      "delete_account": {
+        "description": "注销账号",
+        "confirmation_required": true
+      }
+    },
+    "user_data": {
+      "resources": {
+        "description": "培养资源",
+        "types": ["gold", "exp", "skill_points"]
+      },
+      "gacha_points": {
+        "description": "抽卡点数",
+        "types": ["free", "paid"]
+      },
+      "progress": {
+        "description": "培养进度",
+        "tracking": ["level", "skills", "achievements"]
+      }
+    }
+  },
+  "gacha_system": {
+    "card_pools": {
+      "description": "卡池管理",
+      "features": [
+        "pool_switching",
+        "probability_display",
+        "limited_time_pools"
+      ]
+    },
+    "draw_mechanics": {
+      "single_draw": {
+        "description": "单抽",
+        "cost": 1
+      },
+      "ten_draw": {
+        "description": "十连抽",
+        "cost": 10,
+        "bonus": "guaranteed_rare"
+      },
+      "pity_system": {
+        "description": "保底机制",
+        "tracking": "draw_count"
+      }
+    },
+    "draw_effects": {
+      "animation": {
+        "description": "抽卡动画"
+      },
+      "result_display": {
+        "description": "结果展示"
+      },
+      "history": {
+        "description": "抽卡历史记录"
+      }
+    }
+  },
+  "inventory": {
+    "card_management": {
+      "view_cards": {
+        "description": "查看卡牌",
+        "features": ["card_list", "card_details"]
+      },
+      "card_operations": {
+        "decompose": {
+          "description": "分解重复卡牌",
+          "confirmation_required": true
+        },
+        "enhance": {
+          "description": "卡牌强化",
+          "requirements": ["resources"]
+        }
+      },
+      "filtering": {
+        "description": "卡牌筛选",
+        "criteria": ["rarity", "attribute", "level"]
+      },
+      "search": {
+        "description": "卡牌搜索",
+        "fields": ["name", "id", "type"]
+      }
+    }
+  },
+  "training_system": {
+    "card_training": {
+      "level_up": {
+        "description": "等级提升",
+        "requirements": ["exp", "gold"]
+      },
+      "skill_unlock": {
+        "description": "技能解锁",
+        "requirements": ["skill_points"]
+      },
+      "preview": {
+        "description": "培养预览",
+        "shows": ["stat_changes", "cost"]
+      }
+    },
+    "resource_management": {
+      "acquisition": {
+        "description": "资源获取",
+        "methods": ["quest", "shop", "events"]
+      },
+      "usage": {
+        "description": "资源使用",
+        "tracking": "resource_history"
+      }
+    }
+  },
+  "team_management": {
+    "team_operations": {
+      "formation": {
+        "description": "队伍编成",
+        "slots": 5
+      },
+      "presets": {
+        "description": "队伍预设",
+        "max_presets": 5
+      },
+      "quick_switch": {
+        "description": "快速切换"
+      }
+    },
+    "team_analysis": {
+      "power_rating": {
+        "description": "战力评估"
+      },
+      "recommendations": {
+        "description": "队伍推荐",
+        "based_on": ["content", "synergy"]
+      }
+    }
+  },
+  "dungeon_system": {
+    "dungeon_features": {
+      "difficulty": {
+        "description": "难度选择",
+        "levels": ["easy", "normal", "hard", "expert"]
+      },
+      "rewards": {
+        "description": "奖励预览",
+        "types": ["resources", "items", "cards"]
+      }
+    },
+    "battle_system": {
+      "turn_based": {
+        "description": "回合制战斗",
+        "features": ["skill_selection", "cooldown"]
+      },
+      "auto_battle": {
+        "description": "自动战斗",
+        "settings": ["skill_priority", "target_priority"]
+      },
+      "battle_data": {
+        "description": "战斗数据",
+        "tracking": ["damage", "healing", "turns"]
+      },
+      "replay": {
+        "description": "战斗回放"
+      }
+    },
+    "revival": {
+      "description": "氪金复活",
+      "cost": "premium_currency"
+    }
+  }
+} 
