@@ -1,0 +1,160 @@
+{
+    "databaseName": "CardGameDB",
+    "tables": [
+      {
+        "tableName": "users",
+        "description": "存储用户的基本信息",
+        "columns": [
+          { "name": "user_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "username", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
+          { "name": "password_hash", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+          { "name": "currency", "type": "INT", "constraints": "DEFAULT 0" },
+          { "name": "created_at", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
+        ]
+      },
+      {
+        "tableName": "resource_types",
+        "description": "定义合法的资源类型",
+        "columns": [
+          { "name": "resource_type_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "resource_name", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" }
+        ]
+      },
+      {
+        "tableName": "user_resources",
+        "description": "存储用户的资源信息",
+        "columns": [
+          { "name": "resource_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "resource_type_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "quantity", "type": "INT", "constraints": "DEFAULT 0" }
+        ],
+        "foreignKeys": [
+          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
+          { "column": "resource_type_id", "references": "resource_types(resource_type_id)", "onDelete": "CASCADE" }
+        ]
+      },
+      {
+        "tableName": "card_pools",
+        "description": "存储卡池的基本信息",
+        "columns": [
+          { "name": "pool_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "pool_name", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" }
+        ]
+      },
+      {
+        "tableName": "cards",
+        "description": "存储所有卡牌的基本信息",
+        "columns": [
+          { "name": "card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "card_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+          { "name": "rarity", "type": "ENUM('R', 'SR', 'SSR')", "constraints": "NOT NULL" },
+          { "name": "card_type", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
+          { "name": "image_url", "type": "VARCHAR(255)", "constraints": "" },
+          { "name": "base_stats", "type": "JSON", "constraints": "" }
+        ]
+      },
+      {
+        "tableName": "card_pool_cards",
+        "description": "存储卡池和卡牌的关联关系",
+        "columns": [
+          { "name": "pool_card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "pool_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "card_id", "type": "INT", "constraints": "NOT NULL" }
+        ],
+        "foreignKeys": [
+          { "column": "pool_id", "references": "card_pools(pool_id)", "onDelete": "CASCADE" },
+          { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" }
+        ]
+      },
+      {
+        "tableName": "user_cards",
+        "description": "存储用户拥有的卡牌信息",
+        "columns": [
+          { "name": "user_card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "card_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "level", "type": "INT", "constraints": "DEFAULT 1" },
+          { "name": "acquired_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" },
+          { "name": "current_stats", "type": "JSON", "constraints": "" }
+        ],
+        "foreignKeys": [
+          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
+          { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" }
+        ]
+      },
+      {
+        "tableName": "battle_teams",
+        "description": "存储用户的战斗队伍信息",
+        "columns": [
+          { "name": "team_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "team_name", "type": "VARCHAR(50)", "constraints": "NOT NULL" }
+        ],
+        "foreignKeys": [
+          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" }
+        ]
+      },
+      {
+        "tableName": "team_slots",
+        "description": "存储队伍中的卡牌信息",
+        "columns": [
+          { "name": "slot_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "team_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "user_card_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "slot_position", "type": "INT", "constraints": "NOT NULL" }
+        ],
+        "foreignKeys": [
+          { "column": "team_id", "references": "battle_teams(team_id)", "onDelete": "CASCADE" },
+          { "column": "user_card_id", "references": "user_cards(user_card_id)", "onDelete": "CASCADE" }
+        ]
+      },
+      {
+        "tableName": "dungeons",
+        "description": "存储副本信息",
+        "columns": [
+          { "name": "dungeon_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "dungeon_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" }
+        ]
+      },
+      {
+        "tableName": "dungeon_enemies",
+        "description": "存储副本的敌人信息",
+        "columns": [
+          { "name": "enemy_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "enemy_data", "type": "JSON", "constraints": "" }
+        ],
+        "foreignKeys": [
+          { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" }
+        ]
+      },
+      {
+        "tableName": "dungeon_rewards",
+        "description": "存储副本的奖励信息",
+        "columns": [
+          { "name": "reward_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "reward_data", "type": "JSON", "constraints": "" }
+        ],
+        "foreignKeys": [
+          { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" }
+        ]
+      },
+      {
+        "tableName": "battle_history",
+        "description": "记录用户的战斗历史",
+        "columns": [
+          { "name": "battle_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
+          { "name": "result", "type": "ENUM('WIN', 'LOSE')", "constraints": "NOT NULL" },
+          { "name": "battle_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
+        ],
+        "foreignKeys": [
+          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
+          { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" }
+        ]
+      }
+    ]
+  }
