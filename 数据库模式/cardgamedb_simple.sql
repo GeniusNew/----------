@@ -4,8 +4,9 @@ CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY, -- 用户唯一标识
     username VARCHAR(50) NOT NULL UNIQUE,   -- 用户名
     password_hash VARCHAR(255) NOT NULL,    -- 密码哈希
-    currency INT DEFAULT 0,                 -- 氪金点数
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 创建时间
+    email VARCHAR(100) NOT NULL UNIQUE,     -- 邮箱
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 创建时间
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 更新时间
 );
 
 ----------------------------------------资源类型表----------------------------------------
@@ -26,10 +27,31 @@ CREATE TABLE user_resources (
 );
 
 ----------------------------------------卡池表----------------------------------------
+-- 卡池类型表：存储卡池的类型信息
+CREATE TABLE card_pool_types (
+    pool_type_id INT AUTO_INCREMENT PRIMARY KEY, -- 卡池类型唯一标识
+    pool_type_name VARCHAR(50) NOT NULL UNIQUE   -- 卡池类型名称（如普通池、限时池）
+);
+
 -- 卡池表：存储卡池的基本信息
 CREATE TABLE card_pools (
     pool_id INT AUTO_INCREMENT PRIMARY KEY,     -- 卡池唯一标识
-    pool_name VARCHAR(50) NOT NULL UNIQUE       -- 卡池名称
+    pool_name VARCHAR(50) NOT NULL UNIQUE,      -- 卡池名称
+    pool_type_id INT NOT NULL,                  -- 卡池类型ID
+    probability_display JSON NOT NULL,          -- 稀有度概率显示（如 {"R": 0.8, "SR": 0.15, "SSR": 0.05}）
+    FOREIGN KEY (pool_type_id) REFERENCES card_pool_types(pool_type_id) ON DELETE CASCADE
+);
+
+-- 抽卡记录表：记录用户的抽卡历史
+CREATE TABLE draw_history (
+    draw_id INT AUTO_INCREMENT PRIMARY KEY, -- 抽卡记录唯一标识
+    user_id INT NOT NULL,                   -- 用户ID
+    card_id INT NOT NULL,                   -- 抽到的卡牌ID
+    pool_id INT NOT NULL,                   -- 卡池ID
+    draw_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 抽卡时间
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE,
+    FOREIGN KEY (pool_id) REFERENCES card_pools(pool_id) ON DELETE CASCADE
 );
 
 ----------------------------------------卡牌表----------------------------------------
@@ -84,11 +106,12 @@ CREATE TABLE team_slots (
     FOREIGN KEY (user_card_id) REFERENCES user_cards(user_card_id) ON DELETE CASCADE
 );
 
-----------------------------------------战斗副本及敌人、奖励----------------------------------------
+----------------------------------------副本系统----------------------------------------
 -- 副本表：存储副本信息
 CREATE TABLE dungeons (
     dungeon_id INT AUTO_INCREMENT PRIMARY KEY, -- 副本唯一标识
-    dungeon_name VARCHAR(100) NOT NULL         -- 副本名称
+    dungeon_name VARCHAR(100) NOT NULL,        -- 副本名称
+    difficulty ENUM('easy', 'normal', 'hard', 'expert') NOT NULL -- 难度
 );
 
 -- 副本敌人表：存储副本的敌人信息
