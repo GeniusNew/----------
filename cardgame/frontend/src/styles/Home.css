@@ -1,0 +1,296 @@
+.game-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #1a1a2e;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  color: white;
+}
+
+/* 顶部信息栏样式 */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid #5a5a7a;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.username {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.level-container {
+  display: flex;
+  align-items: center;
+}
+
+.level {
+  font-size: 0.9rem;
+  padding: 2px 8px;
+  background-color: rgba(255, 215, 0, 0.3);
+  border-radius: 10px;
+  color: #ffd700;
+}
+
+.resources {
+  display: flex;
+  gap: 20px;
+}
+
+.resource {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.resource-icon {
+  font-size: 1.2rem;
+}
+
+.resource-value {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.settings-button, .logout-button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.settings-button {
+  background-color: #4a5568;
+  color: white;
+  margin-right: 10px;
+}
+
+.logout-button {
+  background-color: #e53e3e;
+  color: white;
+}
+
+/* 主内容区域样式 */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 20px;
+  padding-bottom: 50px;
+}
+
+/* 功能按钮区域 */
+.feature-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+}
+
+.feature-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+  border: none;
+  background-color: rgba(60, 60, 90, 0.8);
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.feature-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+}
+
+.button-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.button-text {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+/* 自定义各按钮的颜色 */
+.card-pool {
+  background-color: rgba(49, 130, 206, 0.8);
+}
+
+.inventory {
+  background-color: rgba(154, 230, 180, 0.8);
+}
+
+.quest {
+  background-color: rgba(237, 137, 54, 0.8);
+}
+
+.shop {
+  background-color: rgba(214, 158, 46, 0.8);
+}
+
+/* 设置面板样式 */
+.settings-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background-color: rgba(40, 40, 60, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.settings-panel h3 {
+  color: #ffd700;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #5a5a7a;
+  padding-bottom: 10px;
+}
+
+.setting-option {
+  margin-bottom: 15px;
+}
+
+.setting-option label {
+  display: block;
+  margin-bottom: 5px;
+  color: #e2e8f0;
+}
+
+.setting-option input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #4a5568;
+  background-color: #2d3748;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.setting-option input[type="file"] {
+  width: 100%;
+  padding: 5px;
+  color: #e2e8f0;
+}
+
+.setting-option button, .close-button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #4299e1;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.setting-option button:hover, .close-button:hover {
+  background-color: #3182ce;
+}
+
+.close-button {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  background-color: #667eea;
+}
+
+.setting-option .reset-button {
+  width: 100%;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #f56565;
+  color: white;
+  transition: background-color 0.3s;
+  margin-top: 5px;
+}
+
+.setting-option .reset-button:hover {
+  background-color: #e53e3e;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .feature-buttons {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .feature-button {
+    width: 100px;
+    height: 100px;
+  }
+
+  .button-icon {
+    font-size: 2rem;
+  }
+
+  .button-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .resources {
+    justify-content: center;
+  }
+
+  .feature-button {
+    width: 80px;
+    height: 80px;
+  }
+
+  .button-icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+  }
+
+  .button-text {
+    font-size: 0.8rem;
+  }
+} 

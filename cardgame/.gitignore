@@ -1,0 +1,86 @@
+# 依赖
+/frontend/node_modules
+/backend/node_modules
+/.pnp
+.pnp.js
+
+# 测试
+/coverage
+
+# 生产构建
+/frontend/build
+/frontend/dist
+/backend/dist
+/backend/build
+
+# 环境变量文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# IDE和编辑器
+/.idea
+/.vscode
+*.swp
+*.swo
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# 用户上传的图片或媒体文件
+/backend/uploads
+/public/uploads
+/uploads
+
+# 临时文件
+/tmp
+*.tmp
+*.temp
+
+# 本地数据库
+*.sqlite
+*.db
+*.sqlite3
+
+# 编译缓存
+/.cache
+.eslintcache
+.parcel-cache
+
+# 用户自定义背景图片 (如果存储在本地)
+/frontend/public/images/user-backgrounds
+
+# 个人配置文件
+.npmrc
+.yarnrc
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# 测试覆盖率报告
+/coverage
+/.nyc_output
+
+# 前端构建工具生成的文件
+/frontend/.vite
+/frontend/.next
+/frontend/out 
