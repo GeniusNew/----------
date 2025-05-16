@@ -293,4 +293,153 @@
   .button-text {
     font-size: 0.8rem;
   }
+}
+
+/* 充值按钮 */
+.recharge-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.recharge-button:hover {
+  background-color: #45a049;
+}
+
+/* 模态框覆盖层 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 充值模态框 */
+.recharge-modal {
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  padding: 20px;
+  width: 80%;
+  max-width: 500px;
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.recharge-modal h2 {
+  text-align: center;
+  color: #FFD700;
+  margin-bottom: 20px;
+}
+
+/* 充值选项容器 */
+.recharge-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* 充值选项 */
+.recharge-option {
+  background-color: #3a3a3a;
+  border: 2px solid #FFD700;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.recharge-option:hover {
+  background-color: #4a4a4a;
+  transform: translateY(-3px);
+}
+
+.option-gems {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #FFD700;
+}
+
+.option-price {
+  font-size: 1rem;
+  color: #e0e0e0;
+}
+
+/* 密码输入容器 */
+.password-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.password-input {
+  width: 80%;
+  padding: 10px;
+  margin: 15px 0;
+  background-color: #333;
+  border: 1px solid #444;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  font-size: 1.2rem;
+  letter-spacing: 5px;
+}
+
+.error-message {
+  color: #ff6b6b;
+  margin: 10px 0;
+}
+
+.password-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.confirm-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.confirm-button:hover {
+  background-color: #45a049;
+}
+
+/* 已有的关闭按钮样式，根据需要调整 */
+.recharge-modal .close-button {
+  display: block;
+  margin: 0 auto;
+  background-color: #e63946;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.recharge-modal .close-button:hover {
+  background-color: #c1121f;
 } 

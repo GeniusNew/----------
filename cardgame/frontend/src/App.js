@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
+import CardPool from './components/CardPool';
 import './styles/App.css';
 
 function App() {
@@ -36,6 +37,14 @@ function App() {
     setUser(null);
   };
 
+  const updateUserResources = (updatedResources) => {
+    if (user && updatedResources) {
+      const updatedUser = { ...user, ...updatedResources };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
+
   return (
     <div className={isAuthenticated ? "app-fullscreen" : "app"}>
       <Routes>
@@ -50,6 +59,13 @@ function App() {
         <Route 
           path="/register" 
           element={isAuthenticated ? <Navigate to="/" /> : <Register login={login} />} 
+        />
+        <Route 
+          path="/cardpool" 
+          element={isAuthenticated ? 
+            <CardPool user={user} updateUserResources={updateUserResources} /> : 
+            <Navigate to="/login" />
+          } 
         />
       </Routes>
     </div>

@@ -45,7 +45,7 @@
    JWT_SECRET=your_secret_key_replace_this_in_production
    ```
    ```
-   npm run dev
+   npm.cmd run dev
    ```
 
 ### 前端设置

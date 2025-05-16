@@ -12,6 +12,37 @@ class User {
       throw error;
     }
   }
+  
+  // 根据ID获取用户（包含资源信息）
+  static async getUserById(userId) {
+    try {
+      const [rows] = await pool.query(
+        'SELECT user_id, username, email, level, gems, coins FROM users WHERE user_id = ?', 
+        [userId]
+      );
+      return rows.length ? rows[0] : null;
+    } catch (error) {
+      console.error('Error getting user by ID:', error);
+      throw error;
+    }
+  }
+  
+  // 更新用户资源
+  static async updateResources(userId, resources) {
+    try {
+      const { gems, coins } = resources;
+      
+      await pool.query(
+        'UPDATE users SET gems = ?, coins = ? WHERE user_id = ?',
+        [gems, coins, userId]
+      );
+      
+      return { gems, coins };
+    } catch (error) {
+      console.error('Error updating user resources:', error);
+      throw error;
+    }
+  }
 
   // Get user by username
   static async findByUsername(username) {
@@ -58,14 +89,17 @@ class User {
       
       // Insert the new user
       const [result] = await pool.query(
-        'INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)',
-        [username, passwordHash, email]
+        'INSERT INTO users (username, password_hash, email, level, gems, coins) VALUES (?, ?, ?, ?, ?, ?)',
+        [username, passwordHash, email, 1, 1000, 500]
       );
       
       return { 
         user_id: result.insertId, 
         username, 
-        email
+        email,
+        level: 1,
+        gems: 1000,
+        coins: 500
       };
     } catch (error) {
       console.error('Error creating user:', error);
@@ -89,7 +123,10 @@ class User {
       return {
         user_id: user.user_id,
         username: user.username,
-        email: user.email
+        email: user.email,
+        level: user.level || 1,
+        gems: user.gems || 0,
+        coins: user.coins || 0
       };
     } catch (error) {
       console.error('Error verifying password:', error);
