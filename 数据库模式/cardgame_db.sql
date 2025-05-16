@@ -1,3 +1,6 @@
+CREATE DATABASE `CardGameDB`;
+USE CardGameDB;
+
 ----------------------------------------用户表----------------------------------------
 -- 用户表：存储用户的基本信息
 CREATE TABLE users (

@@ -1,3 +1,6 @@
+CREATE DATABASE `CardGameDB`;
+USE CardGameDB;
+
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -37,17 +40,6 @@ CREATE TABLE card_pools (
     end_time TIMESTAMP,
     pool_description TEXT,
     FOREIGN KEY (pool_type_id) REFERENCES card_pool_types(pool_type_id) ON DELETE CASCADE
-);
-
-CREATE TABLE draw_history (
-    draw_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    card_id INT NOT NULL,
-    pool_id INT NOT NULL,
-    draw_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE,
-    FOREIGN KEY (pool_id) REFERENCES card_pools(pool_id) ON DELETE CASCADE
 );
 
 CREATE TABLE cards (
@@ -92,6 +84,17 @@ CREATE TABLE user_cards (
     current_stats JSON,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE
+);
+
+CREATE TABLE draw_history (
+    draw_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    card_id INT NOT NULL,
+    pool_id INT NOT NULL,
+    draw_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE,
+    FOREIGN KEY (pool_id) REFERENCES card_pools(pool_id) ON DELETE CASCADE
 );
 
 CREATE TABLE battle_teams (
