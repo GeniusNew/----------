@@ -1,255 +1,240 @@
 {
-    "databaseName": "CardGameDB",
-    "tables": [
-      {
-        "name": "users",
-        "columns": [
-          { "name": "user_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "username", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
-          { "name": "password_hash", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
-          { "name": "email", "type": "VARCHAR(100)", "constraints": "NOT NULL UNIQUE" },
-          { "name": "created_at", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" },
-          { "name": "updated_at", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }
-        ]
-      },
-      {
-        "name": "resource_types",
-        "columns": [
-          { "name": "resource_type_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "resource_name", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
-          { "name": "price", "type": "DECIMAL(10, 2)", "constraints": "NOT NULL DEFAULT 0.00" }
-        ]
-      },
-      {
-        "name": "user_resources",
-        "columns": [
-          { "name": "resource_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "resource_type_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "quantity", "type": "INT", "constraints": "DEFAULT 0" }
-        ],
-        "foreignKeys": [
-          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
-          { "column": "resource_type_id", "references": "resource_types(resource_type_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "card_pool_types",
-        "columns": [
-          { "name": "pool_type_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "pool_type_name", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
-          { "name": "drop_rates", "type": "JSON", "constraints": "NOT NULL" },
-          { "name": "pool_type_description", "type": "TEXT", "constraints": "" }
-        ]
-      },
-      {
-        "name": "card_pools",
-        "columns": [
-          { "name": "pool_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "pool_name", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
-          { "name": "pool_type_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "start_time", "type": "TIMESTAMP", "constraints": "" },
-          { "name": "end_time", "type": "TIMESTAMP", "constraints": "" },
-          { "name": "pool_description", "type": "TEXT", "constraints": "" }
-        ],
-        "foreignKeys": [
-          { "column": "pool_type_id", "references": "card_pool_types(pool_type_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "draw_history",
-        "columns": [
-          { "name": "draw_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "card_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "pool_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "draw_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
-        ],
-        "foreignKeys": [
-          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
-          { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" },
-          { "column": "pool_id", "references": "card_pools(pool_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "cards",
-        "columns": [
-          { "name": "card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "card_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
-          { "name": "rarity", "type": "ENUM('R', 'SR', 'SSR')", "constraints": "NOT NULL" },
-          { "name": "card_type", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
-          { "name": "image_url", "type": "VARCHAR(255)", "constraints": "" },
-          { "name": "base_stats", "type": "JSON", "constraints": "" },
-          { "name": "card_description", "type": "TEXT", "constraints": "" }
-        ]
-      },
-      {
-        "name": "card_pool_cards",
-        "columns": [
-          { "name": "pool_card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "pool_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "card_id", "type": "INT", "constraints": "NOT NULL" }
-        ],
-        "foreignKeys": [
-          { "column": "pool_id", "references": "card_pools(pool_id)", "onDelete": "CASCADE" },
-          { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "card_skills",
-        "columns": [
-          { "name": "skill_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "skill_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
-          { "name": "skill_description", "type": "TEXT", "constraints": "" }
-        ]
-      },
-      {
-        "name": "card_skill_relation",
-        "columns": [
-          { "name": "relation_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "card_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "skill_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "skill_values", "type": "JSON", "constraints": "" }
-        ],
-        "foreignKeys": [
-          { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" },
-          { "column": "skill_id", "references": "card_skills(skill_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "user_cards",
-        "columns": [
-          { "name": "user_card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "card_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "level", "type": "INT", "constraints": "DEFAULT 1" },
-          { "name": "acquired_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" },
-          { "name": "current_stats", "type": "JSON", "constraints": "" }
-        ],
-        "foreignKeys": [
-          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
-          { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "battle_teams",
-        "columns": [
-          { "name": "team_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "team_name", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
-          { "name": "team_description", "type": "TEXT", "constraints": "" }
-        ],
-        "foreignKeys": [
-          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "team_slots",
-        "columns": [
-          { "name": "slot_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "team_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "user_card_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "slot_position", "type": "INT", "constraints": "NOT NULL" }
-        ],
-        "constraints": [
-          { "type": "UNIQUE", "columns": ["team_id", "slot_position"] }
-        ],
-        "foreignKeys": [
-          { "column": "team_id", "references": "battle_teams(team_id)", "onDelete": "CASCADE" },
-          { "column": "user_card_id", "references": "user_cards(user_card_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "dungeons",
-        "columns": [
-          { "name": "dungeon_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "dungeon_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
-          { "name": "difficulty", "type": "ENUM('easy', 'normal', 'hard', 'expert')", "constraints": "NOT NULL" },
-          { "name": "dungeon_description", "type": "TEXT", "constraints": "" }
-        ]
-      },
-      {
-        "name": "dungeon_enemies",
-        "columns": [
-          { "name": "enemy_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "enemy_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
-          { "name": "enemy_level", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "is_boss", "type": "BOOLEAN", "constraints": "DEFAULT FALSE" },
-          { "name": "enemy_stats", "type": "JSON", "constraints": "" }
-        ],
-        "foreignKeys": [
-          { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "enemy_skills",
-        "columns": [
-          { "name": "skill_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "skill_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
-          { "name": "skill_description", "type": "TEXT", "constraints": "" }
-        ]
-      },
-      {
-        "name": "enemy_skill_relation",
-        "columns": [
-          { "name": "relation_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "enemy_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "skill_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "skill_values", "type": "JSON", "constraints": "" }
-        ],
-        "foreignKeys": [
-          { "column": "enemy_id", "references": "dungeon_enemies(enemy_id)", "onDelete": "CASCADE" },
-          { "column": "skill_id", "references": "enemy_skills(skill_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "dungeon_rewards",
-        "columns": [
-          { "name": "reward_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "reward_type", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "reward_quantity", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "drop_rate", "type": "FLOAT", "constraints": "NOT NULL" }
-        ],
-        "foreignKeys": [
-          { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" },
-          { "column": "reward_type", "references": "resource_types(resource_type_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "battle_history",
-        "columns": [
-          { "name": "battle_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "team_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "result", "type": "ENUM('WIN', 'LOSE')", "constraints": "NOT NULL" },
-          { "name": "turns_taken", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "reward_obtained", "type": "JSON", "constraints": "" },
-          { "name": "resurrection_used", "type": "BOOLEAN", "constraints": "DEFAULT FALSE" },
-          { "name": "battle_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
-        ],
-        "foreignKeys": [
-          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
-          { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" },
-          { "column": "team_id", "references": "battle_teams(team_id)", "onDelete": "CASCADE" }
-        ]
-      },
-      {
-        "name": "payment_records",
-        "columns": [
-          { "name": "payment_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
-          { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "resource_type_id", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "amount_paid", "type": "DECIMAL(10, 2)", "constraints": "NOT NULL" },
-          { "name": "resource_quantity", "type": "INT", "constraints": "NOT NULL" },
-          { "name": "payment_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
-        ],
-        "foreignKeys": [
-          { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
-          { "column": "resource_type_id", "references": "resource_types(resource_type_id)", "onDelete": "CASCADE" }
-        ]
-      }
-    ]
-  }
+  "databaseName": "CardGameDB",
+  "tables": [
+    {
+      "name": "users",
+      "columns": [
+        { "name": "user_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "username", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
+        { "name": "password_hash", "type": "VARCHAR(255)", "constraints": "NOT NULL" },
+        { "name": "email", "type": "VARCHAR(100)", "constraints": "NOT NULL UNIQUE" },
+        { "name": "created_at", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" },
+        { "name": "updated_at", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" },
+        { "name": "diamonds", "type": "INT", "constraints": "DEFAULT 0 NOT NULL CHECK (diamonds >= 0)" },
+        { "name": "coins", "type": "INT", "constraints": "DEFAULT 0 NOT NULL CHECK (coins >= 0)" },
+        { "name": "user_level", "type": "INT", "constraints": "DEFAULT 1 NOT NULL" }
+      ]
+    },
+    {
+      "name": "card_pool_types",
+      "columns": [
+        { "name": "pool_type_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "pool_type_name", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
+        { "name": "drop_rate_R", "type": "FLOAT", "constraints": "NOT NULL" },
+        { "name": "drop_rate_SR", "type": "FLOAT", "constraints": "NOT NULL" },
+        { "name": "drop_rate_SSR", "type": "FLOAT", "constraints": "NOT NULL" },
+        { "name": "pool_type_description", "type": "TEXT", "constraints": "" }
+      ]
+    },
+    {
+      "name": "card_pools",
+      "columns": [
+        { "name": "pool_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "pool_name", "type": "VARCHAR(50)", "constraints": "NOT NULL UNIQUE" },
+        { "name": "pool_type_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "start_time", "type": "TIMESTAMP", "constraints": "" },
+        { "name": "end_time", "type": "TIMESTAMP", "constraints": "" },
+        { "name": "pool_description", "type": "TEXT", "constraints": "" }
+      ],
+      "foreignKeys": [
+        { "column": "pool_type_id", "references": "card_pool_types(pool_type_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "card_skills",
+      "columns": [
+        { "name": "skill_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "skill_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+        { "name": "skill_description", "type": "TEXT", "constraints": "" },
+        { "name": "skill_base_attack", "type": "INT", "constraints": "NOT NULL DEFAULT 0" },
+        { "name": "skill_base_defense", "type": "INT", "constraints": "NOT NULL DEFAULT 0" }
+      ]
+    },
+    {
+      "name": "cards",
+      "columns": [
+        { "name": "card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "card_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+        { "name": "rarity", "type": "ENUM('R', 'SR', 'SSR')", "constraints": "NOT NULL" },
+        { "name": "card_type", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
+        { "name": "image_url", "type": "VARCHAR(255)", "constraints": "" },
+        { "name": "base_attack", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "base_defemse", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "card_description", "type": "TEXT", "constraints": "" },
+        { "name": "card_skill", "type": "INT", "constraints": "" }
+      ],
+      "foreignKeys": [
+        { "column": "card_skill", "references": "card_skills(skill_id)", "onDelete": "SET NULL" }
+      ]
+    },
+    {
+      "name": "card_pool_cards",
+      "columns": [
+        { "name": "pool_card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "pool_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "card_id", "type": "INT", "constraints": "NOT NULL" }
+      ],
+      "foreignKeys": [
+        { "column": "pool_id", "references": "card_pools(pool_id)", "onDelete": "CASCADE" },
+        { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "user_cards",
+      "columns": [
+        { "name": "user_card_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "card_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "level", "type": "INT", "constraints": "DEFAULT 1" },
+        { "name": "acquired_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" },
+        { "name": "current_attack", "type": "INT", "constraints": "" },
+        { "name": "current_defense", "type": "INT", "constraints": "" }
+      ],
+      "foreignKeys": [
+        { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
+        { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "card_skill_relation",
+      "columns": [
+        { "name": "relation_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "user_card_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "skill_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "skill_attack", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "skill_defense", "type": "INT", "constraints": "NOT NULL" }
+      ],
+      "foreignKeys": [
+        { "column": "user_card_id", "references": "user_cards(user_card_id)", "onDelete": "CASCADE" },
+        { "column": "skill_id", "references": "card_skills(skill_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "draw_history",
+      "columns": [
+        { "name": "draw_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "card_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "draw_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
+      ],
+      "foreignKeys": [
+        { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
+        { "column": "card_id", "references": "cards(card_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "battle_teams",
+      "columns": [
+        { "name": "team_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "team_name", "type": "VARCHAR(50)", "constraints": "NOT NULL" },
+        { "name": "team_description", "type": "TEXT", "constraints": "" }
+      ],
+      "foreignKeys": [
+        { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "team_slots",
+      "columns": [
+        { "name": "slot_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "team_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "user_card_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "slot_position", "type": "INT", "constraints": "NOT NULL" }
+      ],
+      "foreignKeys": [
+        { "column": "team_id", "references": "battle_teams(team_id)", "onDelete": "CASCADE" },
+        { "column": "user_card_id", "references": "user_cards(user_card_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "dungeons",
+      "columns": [
+        { "name": "dungeon_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "dungeon_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+        { "name": "difficulty", "type": "ENUM('easy', 'normal', 'hard', 'expert')", "constraints": "NOT NULL" },
+        { "name": "dungeon_description", "type": "TEXT", "constraints": "" }
+      ]
+    },
+    {
+      "name": "dungeon_enemies",
+      "columns": [
+        { "name": "enemy_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "enemy_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+        { "name": "enemy_level", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "is_boss", "type": "BOOLEAN", "constraints": "DEFAULT FALSE" },
+        { "name": "enemy_attack", "type": "INT", "constraints": "" },
+        { "name": "enemy_defense", "type": "INT", "constraints": "" }
+      ],
+      "foreignKeys": [
+        { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "enemy_skills",
+      "columns": [
+        { "name": "skill_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "skill_name", "type": "VARCHAR(100)", "constraints": "NOT NULL" },
+        { "name": "skill_description", "type": "TEXT", "constraints": "" }
+      ]
+    },
+    {
+      "name": "enemy_skill_relation",
+      "columns": [
+        { "name": "relation_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "enemy_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "skill_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "skill_attack", "type": "INT", "constraints": "" },
+        { "name": "skill_defense", "type": "INT", "constraints": "" }
+      ],
+      "foreignKeys": [
+        { "column": "enemy_id", "references": "dungeon_enemies(enemy_id)", "onDelete": "CASCADE" },
+        { "column": "skill_id", "references": "enemy_skills(skill_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "dungeon_rewards",
+      "columns": [
+        { "name": "reward_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "reward_type", "type": "ENUM('diamonds', 'coins')", "constraints": "NOT NULL" },
+        { "name": "reward_quantity", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "drop_rate", "type": "FLOAT", "constraints": "NOT NULL" }
+      ],
+      "foreignKeys": [
+        { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "battle_history",
+      "columns": [
+        { "name": "battle_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "dungeon_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "result", "type": "ENUM('WIN', 'LOSE')", "constraints": "NOT NULL" },
+        { "name": "turns_taken", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "resurrection_used", "type": "BOOLEAN", "constraints": "DEFAULT FALSE" },
+        { "name": "battle_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
+      ],
+      "foreignKeys": [
+        { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" },
+        { "column": "dungeon_id", "references": "dungeons(dungeon_id)", "onDelete": "CASCADE" }
+      ]
+    },
+    {
+      "name": "payment_records",
+      "columns": [
+        { "name": "payment_id", "type": "INT", "constraints": "AUTO_INCREMENT PRIMARY KEY" },
+        { "name": "user_id", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "resource_type", "type": "ENUM('diamonds', 'coins')", "constraints": "NOT NULL" },
+        { "name": "amount_paid", "type": "DECIMAL(10, 2)", "constraints": "NOT NULL" },
+        { "name": "resource_quantity", "type": "INT", "constraints": "NOT NULL" },
+        { "name": "payment_time", "type": "TIMESTAMP", "constraints": "DEFAULT CURRENT_TIMESTAMP" }
+      ],
+      "foreignKeys": [
+        { "column": "user_id", "references": "users(user_id)", "onDelete": "CASCADE" }
+      ]
+    }
+  ]
+}
