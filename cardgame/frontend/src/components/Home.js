@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
+import axios from 'axios';
 
-function Home({ user, logout }) {
+function Home() {
   const navigate = useNavigate();
   const defaultBackground = '/images/default-bg.jpg';
   const [backgroundImage, setBackgroundImage] = useState(defaultBackground);
   const [showSettings, setShowSettings] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   // 充值相关状态
   const [showRecharge, setShowRecharge] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -24,6 +28,38 @@ function Home({ user, logout }) {
     { amount: 3280, gems: 3880, label: '3280+600钻石', price: '￥328' },
     { amount: 6480, gems: 7980, label: '6480+1500钻石', price: '￥648' }
   ];
+
+  // 当组件挂载时，检查用户登录状态
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      try {
+        setLoading(true);
+        // 获取用户资源信息
+        const response = await axios.get('/api/user/resources', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        setUser(response.data);
+      } catch (err) {
+        console.error('获取用户信息失败:', err);
+        setError('获取用户信息失败，请重新登录');
+        localStorage.removeItem('token');
+        navigate('/login');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, [navigate]);
 
   // 从本地存储加载背景图片
   useEffect(() => {
@@ -68,12 +104,17 @@ function Home({ user, logout }) {
   const goToCardPool = () => {
     navigate('/cardpool');
   };
-
+  
+  // 导航到仓库页面
+  const goToInventory = () => {
+    navigate('/inventory');
+  };
+  
   // 打开充值界面
   const openRechargeModal = () => {
     setShowRecharge(true);
   };
-
+  
   // 关闭充值界面
   const closeRechargeModal = () => {
     setShowRecharge(false);
@@ -100,35 +141,29 @@ function Home({ user, logout }) {
         const newGems = (user.gems || 0) + selectedAmount;
         
         // 调用后端API更新用户钻石
-        const response = await fetch('http://localhost:5000/api/user/resources', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify({ gems: newGems })
-        });
+        const response = await axios.post('/api/user/resources', 
+          { gems: newGems },
+          {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
         
-        const data = await response.json();
-        
-        if (response.ok) {
-          // 更新本地存储的用户数据
-          const updatedUser = { 
-            ...user, 
-            gems: newGems 
-          };
-          localStorage.setItem('user', JSON.stringify(updatedUser));
+        if (response.data) {
+          // 更新本地用户数据
+          setUser(prevUser => ({
+            ...prevUser,
+            gems: newGems
+          }));
           
           // 页面提示
           alert(`充值成功！获得${selectedAmount}钻石`);
           
           // 关闭充值界面
           closeRechargeModal();
-          
-          // 刷新页面以显示更新后的钻石数量
-          window.location.reload();
         } else {
-          setPasswordError(data.message || '充值失败，请稍后再试');
+          setPasswordError(response.data.message || '充值失败，请稍后再试');
         }
       } catch (error) {
         console.error('充值出错:', error);
@@ -138,6 +173,20 @@ function Home({ user, logout }) {
       setPasswordError('密码错误，请重试');
     }
   };
+
+  // 退出登录
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
+  if (loading) {
+    return <div className="loading">加载中...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="game-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
@@ -163,11 +212,11 @@ function Home({ user, logout }) {
         <button className="settings-button" onClick={() => setShowSettings(!showSettings)}>
           ⚙️ 设置
         </button>
-        <button onClick={logout} className="logout-button">
+        <button onClick={handleLogout} className="logout-button">
           退出
         </button>
       </div>
-
+      
       {/* 主内容区 */}
       <div className="main-content">
         {/* 功能按钮区 */}
@@ -176,7 +225,7 @@ function Home({ user, logout }) {
             <div className="button-icon">🎴</div>
             <div className="button-text">卡池</div>
           </button>
-          <button className="feature-button inventory">
+          <button className="feature-button inventory" onClick={goToInventory}>
             <div className="button-icon">📦</div>
             <div className="button-text">仓库</div>
           </button>

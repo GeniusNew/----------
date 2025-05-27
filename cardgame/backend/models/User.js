@@ -1,5 +1,6 @@
 const { pool } = require('../config/db');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 class User {
   // Get user by ID
@@ -110,16 +111,46 @@ class User {
   // Verify user password
   static async verifyPassword(username, password) {
     try {
+      console.log(`尝试验证用户 ${username} 的密码`);
       const user = await this.findByUsername(username);
       if (!user) {
+        console.log('用户不存在');
         return null;
       }
       
-      const isMatch = await bcrypt.compare(password, user.password_hash);
+      console.log('用户存在，检查密码...');
+      
+      // 首先尝试使用bcrypt验证
+      let isMatch = false;
+      try {
+        if (user.password_hash.startsWith('$2')) {
+          console.log('使用bcrypt验证密码');
+          isMatch = await bcrypt.compare(password, user.password_hash);
+        } else {
+          // 尝试SHA-256验证（兼容原有系统）
+          console.log('使用SHA-256验证密码');
+          const hash = crypto.createHash('sha256').update(password).digest('hex');
+          isMatch = (hash === user.password_hash);
+          
+          if (isMatch) {
+            console.log('SHA-256验证成功，更新为bcrypt哈希');
+            // 更新为bcrypt哈希
+            const saltRounds = 10;
+            const bcryptHash = await bcrypt.hash(password, saltRounds);
+            await pool.query('UPDATE users SET password_hash = ? WHERE user_id = ?', [bcryptHash, user.user_id]);
+          }
+        }
+      } catch (error) {
+        console.error('密码验证错误:', error);
+        return null;
+      }
+      
       if (!isMatch) {
+        console.log('密码验证失败');
         return null;
       }
       
+      console.log('密码验证成功');
       return {
         user_id: user.user_id,
         username: user.username,

@@ -442,4 +442,137 @@
 
 .recharge-modal .close-button:hover {
   background-color: #c1121f;
+}
+
+.home-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+.game-menu {
+  padding: 30px 20px;
+}
+
+.menu-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  border-left: 5px solid #3498db;
+  padding-left: 10px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.menu-item {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: 120px;
+}
+
+.menu-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.menu-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.menu-label {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.menu-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menu-item.disabled:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.game-news {
+  padding: 0 20px 30px;
+}
+
+.news-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  border-left: 5px solid #e74c3c;
+  padding-left: 10px;
+}
+
+.news-content {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.news-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-date {
+  flex: 0 0 120px;
+  font-weight: bold;
+  color: #666;
+}
+
+.news-text {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .news-item {
+    flex-direction: column;
+  }
+  
+  .news-date {
+    margin-bottom: 5px;
+  }
 } 
