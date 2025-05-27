@@ -17,7 +17,7 @@ class User {
   static async getUserById(userId) {
     try {
       const [rows] = await pool.query(
-        'SELECT user_id, username, email, level, gems, coins FROM users WHERE user_id = ?', 
+        'SELECT user_id, username, email, user_level as level, diamonds as gems, coins FROM users WHERE user_id = ?', 
         [userId]
       );
       return rows.length ? rows[0] : null;
@@ -33,7 +33,7 @@ class User {
       const { gems, coins } = resources;
       
       await pool.query(
-        'UPDATE users SET gems = ?, coins = ? WHERE user_id = ?',
+        'UPDATE users SET diamonds = ?, coins = ? WHERE user_id = ?',
         [gems, coins, userId]
       );
       
@@ -89,7 +89,7 @@ class User {
       
       // Insert the new user
       const [result] = await pool.query(
-        'INSERT INTO users (username, password_hash, email, level, gems, coins) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO users (username, password_hash, email, user_level, diamonds, coins) VALUES (?, ?, ?, ?, ?, ?)',
         [username, passwordHash, email, 1, 1000, 500]
       );
       
@@ -124,8 +124,8 @@ class User {
         user_id: user.user_id,
         username: user.username,
         email: user.email,
-        level: user.level || 1,
-        gems: user.gems || 0,
+        level: user.user_level || 1,
+        gems: user.diamonds || 0,
         coins: user.coins || 0
       };
     } catch (error) {

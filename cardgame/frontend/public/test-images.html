@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卡牌图片测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .card-image {
+            height: 250px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-info {
+            padding: 10px;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .success {
+            color: green;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>卡牌图片测试</h1>
+    
+    <div class="card-container" id="cardContainer">
+        <!-- 卡牌将通过JavaScript动态添加 -->
+    </div>
+    
+    <script>
+        // 测试的卡牌名称列表
+        const cardNames = [
+            'ex_card_1',
+            'ex_card_2',
+            'ex_card_3',
+            'ex_card_4',
+            'ex_card_5'
+        ];
+        
+        // 测试的图片扩展名
+        const extensions = ['.png', '.jpg', ''];
+        
+        // 获取容器
+        const container = document.getElementById('cardContainer');
+        
+        // 为每个卡牌创建测试项
+        cardNames.forEach(cardName => {
+            extensions.forEach(ext => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const imageUrl = `/images/cards/${cardName}${ext}`;
+                
+                const cardImage = document.createElement('div');
+                cardImage.className = 'card-image';
+                
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = cardName;
+                
+                // 创建状态显示
+                const status = document.createElement('div');
+                status.id = `status-${cardName}${ext}`;
+                
+                // 图片加载成功
+                img.onload = () => {
+                    status.className = 'success';
+                    status.textContent = '加载成功';
+                };
+                
+                // 图片加载失败
+                img.onerror = () => {
+                    status.className = 'error';
+                    status.textContent = '加载失败';
+                    img.style.display = 'none';
+                    cardImage.textContent = cardName.charAt(0);
+                };
+                
+                cardImage.appendChild(img);
+                
+                const cardInfo = document.createElement('div');
+                cardInfo.className = 'card-info';
+                
+                const cardTitle = document.createElement('div');
+                cardTitle.textContent = `${cardName}${ext}`;
+                
+                cardInfo.appendChild(cardTitle);
+                cardInfo.appendChild(status);
+                
+                card.appendChild(cardImage);
+                card.appendChild(cardInfo);
+                
+                container.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html> 

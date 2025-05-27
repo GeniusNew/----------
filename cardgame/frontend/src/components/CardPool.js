@@ -14,6 +14,39 @@ function CardPool({ user, updateUserResources }) {
     tenDraw: { gems: 950, coins: 0 }
   };
   
+  // 处理图片URL，尝试不同扩展名
+  const getImageUrl = (cardName) => {
+    // 默认使用卡名作为图片名称的基础部分，优先尝试.png
+    return `/images/cards/${cardName}.png`;
+  };
+  
+  // 尝试不同扩展名加载图片
+  const tryAlternateImageFormats = (e, cardName) => {
+    const imgElement = e.target;
+    const currentSrc = imgElement.src;
+    
+    console.log(`图片加载失败: ${currentSrc}`);
+    
+    // 如果当前URL包含.png，尝试.jpg
+    if (currentSrc.endsWith('.png')) {
+      imgElement.src = `/images/cards/${cardName}.jpg`;
+      console.log(`尝试加载: ${imgElement.src}`);
+      return;
+    }
+    
+    // 如果当前URL包含.jpg，尝试无扩展名
+    if (currentSrc.endsWith('.jpg')) {
+      imgElement.src = `/images/cards/${cardName}`;
+      console.log(`尝试加载: ${imgElement.src}`);
+      return;
+    }
+    
+    // 如果所有尝试都失败，显示首字母
+    console.error(`所有图片格式加载失败，显示首字母`);
+    imgElement.style.display = 'none';
+    imgElement.parentNode.innerText = cardName.charAt(0);
+  };
+  
   // 返回主页
   const goToHome = () => {
     navigate('/');
@@ -150,7 +183,18 @@ function CardPool({ user, updateUserResources }) {
                   key={index} 
                   className={`card-item rarity-${card.rarity.toLowerCase()}`}
                 >
-                  <div className="card-image">{card.name.charAt(0)}</div>
+                  <div className="card-image">
+                    {card.image_url ? (
+                      <img 
+                        src={getImageUrl(card.name)} 
+                        alt={card.name} 
+                        onError={(e) => tryAlternateImageFormats(e, card.name)}
+                        onLoad={() => console.log(`图片加载成功: ${getImageUrl(card.name)}`)}
+                      />
+                    ) : (
+                      card.name.charAt(0)
+                    )}
+                  </div>
                   <div className="card-info">
                     <div className="card-name">{card.name}</div>
                     <div className="card-rarity">{card.rarity}</div>

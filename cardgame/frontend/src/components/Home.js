@@ -125,7 +125,7 @@ function Home({ user, logout }) {
           // 关闭充值界面
           closeRechargeModal();
           
-          // 重新加载页面以显示更新后的钻石数量
+          // 刷新页面以显示更新后的钻石数量
           window.location.reload();
         } else {
           setPasswordError(data.message || '充值失败，请稍后再试');

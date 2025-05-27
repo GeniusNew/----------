@@ -34,6 +34,9 @@ exports.login = async (req, res) => {
       { expiresIn: '24h' }
     );
     
+    // 获取用户完整信息（包括资源）
+    const userWithResources = await User.getUserById(user.user_id);
+    
     // Send response
     res.status(200).json({
       success: true,
@@ -41,7 +44,10 @@ exports.login = async (req, res) => {
       user: {
         id: user.user_id,
         username: user.username,
-        email: user.email
+        email: user.email,
+        gems: userWithResources.gems,
+        coins: userWithResources.coins,
+        level: userWithResources.level
       },
       token
     });
@@ -101,7 +107,10 @@ exports.register = async (req, res) => {
       user: {
         id: newUser.user_id,
         username: newUser.username,
-        email: newUser.email
+        email: newUser.email,
+        gems: newUser.gems,
+        coins: newUser.coins,
+        level: newUser.level
       },
       token
     });
@@ -134,7 +143,8 @@ exports.register = async (req, res) => {
 exports.getCurrentUser = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const user = await User.findById(userId);
+    // 获取用户完整信息（包括资源）
+    const user = await User.getUserById(userId);
     
     if (!user) {
       return res.status(404).json({ 
@@ -149,6 +159,9 @@ exports.getCurrentUser = async (req, res) => {
         id: user.user_id,
         username: user.username,
         email: user.email,
+        gems: user.gems,
+        coins: user.coins,
+        level: user.level,
         created_at: user.created_at
       }
     });
