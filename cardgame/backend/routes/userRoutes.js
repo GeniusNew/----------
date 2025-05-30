@@ -9,4 +9,7 @@ router.post('/resources', authenticateToken, userController.updateResources);
 // 获取用户资源信息路由（受保护）
 router.get('/resources', authenticateToken, userController.getUserResources);
 
+// 获取用户卡牌仓库路由（受保护）
+router.get('/cards', authenticateToken, userController.getUserCards);
+
 module.exports = router; 
