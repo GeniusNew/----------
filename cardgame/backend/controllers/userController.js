@@ -235,7 +235,7 @@ const getUserCards = async (req, res) => {
       });
     }
     
-    // 修改查询，解决GROUP BY问题
+    // 修改查询，解决GROUP BY问题，并获取技能信息
     console.log('执行SQL查询...');
     const [rows] = await pool.query(`
       SELECT 
@@ -250,11 +250,16 @@ const getUserCards = async (req, res) => {
         c.card_type,
         c.image_url,
         c.card_description,
-        COUNT(*) as quantity
+        COUNT(*) as quantity,
+        cs.skill_name,
+        cs.skill_description,
+        cs.skill_base_attack,
+        cs.skill_base_defense
       FROM user_cards uc
       JOIN cards c ON uc.card_id = c.card_id
+      LEFT JOIN card_skills cs ON c.card_skill = cs.skill_id
       WHERE uc.user_id = ?
-      GROUP BY uc.card_id, c.card_name, c.rarity, c.card_type, c.image_url, c.card_description
+      GROUP BY uc.card_id, c.card_name, c.rarity, c.card_type, c.image_url, c.card_description, cs.skill_name, cs.skill_description, cs.skill_base_attack, cs.skill_base_defense
       ORDER BY 
         CASE c.rarity 
           WHEN 'SSR' THEN 1 
@@ -286,7 +291,11 @@ const getUserCards = async (req, res) => {
       image_url: card.image_url || `/images/cards/${card.card_name}.jpg`,
       acquired_time: card.acquired_time,
       quantity: card.quantity,
-      original_rarity: card.rarity // 保留原始稀有度用于分解计算
+      original_rarity: card.rarity, // 保留原始稀有度用于分解计算
+      skill_name: card.skill_name,
+      skill_description: card.skill_description,
+      skill_base_attack: card.skill_base_attack,
+      skill_base_defense: card.skill_base_defense
     }));
     
     console.log('数据格式转换完成，返回结果');

@@ -16,6 +16,7 @@ function Inventory({ user, refreshUserData }) {
   const [filterRarity, setFilterRarity] = useState('all');
   const [sortBy, setSortBy] = useState('rarity');
   const [userData, setUserData] = useState(user || { gems: 0, coins: 0 });
+  const [decomposeMode, setDecomposeMode] = useState(false); // 分解模式状态
   
   // 稀有度过滤选项
   const rarityOptions = [
@@ -316,6 +317,17 @@ function Inventory({ user, refreshUserData }) {
               ))}
             </select>
           </div>
+          <div className="filter-group">
+            <label className="decompose-mode-label">
+              <input 
+                type="checkbox" 
+                checked={decomposeMode} 
+                onChange={(e) => setDecomposeMode(e.target.checked)}
+                className="decompose-mode-checkbox"
+              />
+              分解模式
+            </label>
+          </div>
           <div className="card-count">
             {filteredCards.length} / {cards.length} 张卡牌
           </div>
@@ -359,7 +371,7 @@ function Inventory({ user, refreshUserData }) {
                   <div className="card-level">等级：{card.level}</div>
                   <div className="card-quantity">数量：{card.quantity}</div>
                 </div>
-                {card.quantity > 1 && (
+                {decomposeMode && card.quantity > 1 && (
                   <div className="card-actions">
                     <button 
                       className="decompose-button"
@@ -380,10 +392,11 @@ function Inventory({ user, refreshUserData }) {
         <div className="card-details-overlay">
           <div className="card-details-container">
             <button 
-              className="close-button" 
+              className="close-button-x" 
               onClick={closeCardDetails}
+              title="关闭"
             >
-              关闭
+              ×
             </button>
             
             <div className="card-details-content">
@@ -412,10 +425,6 @@ function Inventory({ user, refreshUserData }) {
                   </span>
                 </div>
                 <div className="detail-row">
-                  <span className="detail-label">类型：</span>
-                  <span className="detail-value">{selectedCard.type}</span>
-                </div>
-                <div className="detail-row">
                   <span className="detail-label">等级：</span>
                   <span className="detail-value">{selectedCard.level}</span>
                 </div>
@@ -438,24 +447,42 @@ function Inventory({ user, refreshUserData }) {
                   </span>
                 </div>
                 
+                {/* 技能信息 */}
+                {selectedCard.skill_name ? (
+                  <div className="card-skill">
+                    <h3>卡牌技能</h3>
+                    <div className="skill-info">
+                      <div className="skill-name">{selectedCard.skill_name}</div>
+                      <div className="skill-description">{selectedCard.skill_description || '暂无技能描述'}</div>
+                      <div className="skill-stats">
+                        <span className="skill-attack">技能攻击力：+{selectedCard.skill_base_attack || 0}</span>
+                        <span className="skill-defense">技能防御力：+{selectedCard.skill_base_defense || 0}</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="card-skill">
+                    <h3>卡牌技能</h3>
+                    <div className="no-skill">该卡牌没有技能</div>
+                  </div>
+                )}
+                
                 <div className="card-description">
                   <h3>卡牌描述</h3>
                   <p>{selectedCard.description || '暂无描述'}</p>
                 </div>
 
-                {selectedCard.quantity > 1 && (
-                  <div className="detail-actions">
-                    <button 
-                      className="decompose-button"
-                      onClick={() => {
-                        closeCardDetails();
-                        showDecomposeConfirm(selectedCard);
-                      }}
-                    >
-                      分解卡牌
-                    </button>
-                  </div>
-                )}
+                <div className="detail-actions">
+                  <button 
+                    className="cultivate-button"
+                    onClick={() => {
+                      // 跳转到培养界面
+                      navigate('/cultivate', { state: { selectedCard } });
+                    }}
+                  >
+                    培养
+                  </button>
+                </div>
               </div>
             </div>
           </div>

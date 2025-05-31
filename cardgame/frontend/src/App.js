@@ -6,6 +6,7 @@ import Register from './components/Register';
 import Home from './components/Home';
 import CardPool from './components/CardPool';
 import Inventory from './components/Inventory';
+import Cultivate from './components/Cultivate';
 import Shop from './components/Shop';
 import './styles/App.css';
 
@@ -83,6 +84,10 @@ function App() {
         <Route 
           path="/inventory" 
           element={isAuthenticated ? <Inventory user={user} refreshUserData={fetchUserData} /> : <Navigate to="/login" />} 
+        />
+        <Route 
+          path="/cultivate" 
+          element={isAuthenticated ? <Cultivate user={user} refreshUserData={fetchUserData} /> : <Navigate to="/login" />} 
         />
         <Route 
           path="/shop" 
