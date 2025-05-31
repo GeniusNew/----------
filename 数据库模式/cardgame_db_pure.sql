@@ -47,7 +47,7 @@ CREATE TABLE cards (
     card_type VARCHAR(50) NOT NULL,         
     image_url VARCHAR(255),                 
     base_attack INT NOT NULL,               
-    base_defemse INT NOT NULL,              
+    base_defense INT NOT NULL,              
     card_description TEXT,                  
     card_skill INT,                         
     FOREIGN KEY (card_skill) REFERENCES card_skills(skill_id) ON DELETE SET NULL

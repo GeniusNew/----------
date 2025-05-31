@@ -36,6 +36,25 @@
   background-color: #2980b9;
 }
 
+.resources {
+  display: flex;
+  gap: 20px;
+}
+
+.resource {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.resource-icon {
+  font-size: 1.2rem;
+}
+
+.resource-value {
+  font-weight: bold;
+}
+
 .cultivate-content {
   flex: 1;
   display: flex;
@@ -94,6 +113,14 @@
   text-align: center;
 }
 
+.card-rarity {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #666;
+}
+
 .card-stats {
   display: flex;
   flex-direction: column;
@@ -118,7 +145,7 @@
   color: #2c3e50;
 }
 
-.cultivate-options {
+.upgrade-panel {
   flex: 1;
   background-color: white;
   border-radius: 12px;
@@ -137,71 +164,257 @@
   padding-bottom: 10px;
 }
 
-.cultivate-section {
+/* 等级选择器样式 */
+.level-selector {
   margin-bottom: 25px;
   padding: 20px;
-  border: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
   border-radius: 8px;
-  background-color: #fafafa;
 }
 
-.cultivate-section h3 {
-  margin: 0 0 10px 0;
-  color: #2c3e50;
-  font-size: 1.1rem;
-}
-
-.cultivate-section p {
-  margin: 0 0 15px 0;
-  color: #666;
-  line-height: 1.4;
-}
-
-.skill-info {
-  background-color: white;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  border-left: 4px solid #3498db;
-}
-
-.skill-name {
+.level-selector label {
+  display: block;
   font-weight: bold;
+  margin-bottom: 10px;
   color: #2c3e50;
-  margin-bottom: 8px;
 }
 
-.skill-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 0.9rem;
-}
-
-.skill-stats span {
-  color: #666;
-}
-
-.cultivate-btn {
+.level-slider {
   width: 100%;
-  padding: 12px;
+  height: 8px;
+  background: #ddd;
+  border-radius: 4px;
+  outline: none;
+  margin-bottom: 15px;
+}
+
+.level-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.level-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.level-display .target-level {
+  color: #e74c3c;
+  font-size: 1.4rem;
+}
+
+/* 升级预览样式 */
+.preview-loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+.upgrade-preview {
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  background-color: #f8f9fa;
+}
+
+.stat-changes h3,
+.upgrade-costs h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.stat-change {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.stat-change .arrow {
+  color: #3498db;
+  font-weight: bold;
+}
+
+.stat-change .new-value {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.stat-change .increase {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.upgrade-costs {
+  margin-top: 20px;
+}
+
+.cost-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.cost-icon {
+  font-size: 1.2rem;
+}
+
+.sufficient {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.insufficient {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.required-items {
+  margin-top: 15px;
+}
+
+.items-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.item-requirement {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background-color: white;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.item-name {
+  font-weight: bold;
+}
+
+/* 升级按钮样式 */
+.upgrade-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.upgrade-button {
   background-color: #27ae60;
   color: white;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
+  padding: 15px 30px;
+  font-size: 1.1rem;
   font-weight: bold;
-  font-size: 1rem;
+  cursor: pointer;
   transition: background-color 0.3s;
+  min-width: 200px;
 }
 
-.cultivate-btn:hover:not(:disabled) {
+.upgrade-button:hover:not(:disabled) {
   background-color: #229954;
 }
 
-.cultivate-btn:disabled {
+.upgrade-button:disabled {
   background-color: #bdc3c7;
   cursor: not-allowed;
+}
+
+/* 强化材料展示样式 */
+.enhancement-items-display {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.enhancement-items-display h3 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.item-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  transition: transform 0.2s;
+}
+
+.item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.item-card .item-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.item-card .item-quantity {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #3498db;
+  margin-bottom: 8px;
+}
+
+.item-card .item-description {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.3;
+}
+
+.no-items {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px;
+}
+
+/* 最高等级消息样式 */
+.max-level-message {
+  text-align: center;
+  padding: 40px;
+  background-color: #fff3cd;
+  border: 2px solid #ffeaa7;
+  border-radius: 12px;
+  color: #856404;
+}
+
+.max-level-message h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.5rem;
+}
+
+.max-level-message p {
+  margin: 0;
+  font-size: 1.1rem;
 }
 
 .loading-message {
@@ -211,6 +424,49 @@
   height: 100vh;
   font-size: 1.2rem;
   color: #666;
+}
+
+/* 道具使用按钮样式 */
+.item-actions {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.use-item-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.use-item-button:hover:not(:disabled) {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.use-item-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+  color: #7f8c8d;
+}
+
+.use-item-button:active {
+  transform: translateY(0);
+}
+
+/* 特殊道具按钮颜色 */
+.item-card:has(.use-item-button) {
+  border-left: 4px solid #3498db;
+}
+
+.item-card:has(.use-item-button:disabled) {
+  border-left: 4px solid #bdc3c7;
 }
 
 /* 响应式设计 */
@@ -226,5 +482,34 @@
   
   .card-image {
     height: 300px;
+  }
+  
+  .items-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .level-display {
+    font-size: 1rem;
+  }
+  
+  .level-display .target-level {
+    font-size: 1.2rem;
+  }
+  
+  .stat-change {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .upgrade-button {
+    min-width: 100%;
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+  
+  .use-item-button {
+    padding: 10px;
+    font-size: 0.85rem;
   }
 } 

@@ -15,4 +15,16 @@ router.get('/cards', authenticateToken, userController.getUserCards);
 // 卡牌分解路由（受保护）
 router.post('/cards/decompose', authenticateToken, userController.decomposeCard);
 
+// 获取用户强化物品路由（受保护）
+router.get('/enhancement-items', authenticateToken, userController.getUserEnhancementItems);
+
+// 获取卡牌升级预览路由（受保护）
+router.get('/cards/upgrade-preview', authenticateToken, userController.getCardUpgradePreview);
+
+// 执行卡牌升级路由（受保护）
+router.post('/cards/upgrade', authenticateToken, userController.upgradeCard);
+
+// 使用道具路由（受保护）
+router.post('/cards/use-item', authenticateToken, userController.useItem);
+
 module.exports = router; 

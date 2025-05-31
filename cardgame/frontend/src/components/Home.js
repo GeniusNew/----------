@@ -110,6 +110,11 @@ function Home() {
     navigate('/inventory');
   };
   
+  // 导航到商店页面
+  const goToShop = () => {
+    navigate('/shop');
+  };
+  
   // 打开充值界面
   const openRechargeModal = () => {
     setShowRecharge(true);
@@ -233,7 +238,7 @@ function Home() {
             <div className="button-icon">🏆</div>
             <div className="button-text">副本</div>
           </button>
-          <button className="feature-button shop">
+          <button className="feature-button shop" onClick={goToShop}>
             <div className="button-icon">🛒</div>
             <div className="button-text">商店</div>
           </button>

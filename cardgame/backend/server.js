@@ -5,6 +5,7 @@ const loggerMiddleware = require('./middleware/loggerMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const cardPoolRoutes = require('./routes/cardPoolRoutes');
 const userRoutes = require('./routes/userRoutes');
+const shopRoutes = require('./routes/shopRoutes');
 
 // Create Express app
 const app = express();
@@ -23,6 +24,7 @@ testConnection();
 app.use('/api/auth', authRoutes);
 app.use('/api/cardpool', cardPoolRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/shop', shopRoutes);
 
 // Simple test route
 app.get('/', (req, res) => {
