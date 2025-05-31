@@ -96,27 +96,30 @@
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
+  justify-items: center;
 }
 
 .card-item {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
   position: relative;
+  width: 200px;
 }
 
 .card-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
 .card-image {
-  height: 140px;
+  height: 300px;
+  width: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -264,8 +267,8 @@
 }
 
 .card-detail-image {
-  flex: 0 0 250px;
-  height: 300px;
+  flex: 0 0 300px;
+  height: 450px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -324,4 +327,61 @@
 .card-description p {
   line-height: 1.5;
   color: #555;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+  }
+  
+  .card-item {
+    width: 160px;
+  }
+  
+  .card-image {
+    height: 240px;
+    width: 160px;
+  }
+  
+  .card-details-container {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .card-detail-image {
+    flex: 0 0 240px;
+    height: 360px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .card-item {
+    width: 140px;
+  }
+  
+  .card-image {
+    height: 210px;
+    width: 140px;
+  }
+  
+  .card-details-container {
+    width: 98%;
+    padding: 10px;
+  }
+  
+  .card-detail-image {
+    flex: 0 0 210px;
+    height: 315px;
+  }
+  
+  .card-details-content {
+    flex-direction: column;
+  }
 } 

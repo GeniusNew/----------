@@ -306,8 +306,9 @@ function CardPool({ user: userProp, refreshUserData }) {
                       src={card.image_url} 
                       alt={card.name} 
                       onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.parentNode.innerText = card.name.charAt(0);
+                        console.log(`图片加载失败: ${card.image_url}, 使用默认图片`);
+                        e.target.src = '/images/cards/ex_card_1.png';
+                        e.target.onerror = null; // 防止无限循环
                       }}
                     />
                   </div>

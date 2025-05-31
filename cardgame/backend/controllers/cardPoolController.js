@@ -95,7 +95,7 @@ const drawCards = async (req, res) => {
         id: card.card_id,
         name: card.card_name,
         rarity: rarityMap[card.rarity],
-        image_url: card.image_url || `/images/cards/${card.card_name}.png`
+        image_url: card.image_url || `/images/cards/${card.card_name}.jpg`
       };
       
       // 更新用户资源
@@ -181,7 +181,7 @@ const drawCards = async (req, res) => {
           id: card.card_id,
           name: card.card_name,
           rarity: rarityMap[card.rarity],
-          image_url: card.image_url || `/images/cards/${card.card_name}.png`
+          image_url: card.image_url || `/images/cards/${card.card_name}.jpg`
         });
         
         // 记录抽卡历史

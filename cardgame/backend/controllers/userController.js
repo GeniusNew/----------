@@ -130,7 +130,7 @@ const getUserCards = async (req, res) => {
       attack: card.current_attack,
       defense: card.current_defense,
       description: card.card_description,
-      image_url: card.image_url || `/images/cards/${card.card_name}.png`,
+      image_url: card.image_url || `/images/cards/${card.card_name}.jpg`,
       acquired_time: card.acquired_time,
       quantity: card.quantity
     }));
