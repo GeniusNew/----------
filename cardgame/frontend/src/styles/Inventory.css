@@ -89,6 +89,13 @@
   background-color: white;
 }
 
+.sort-filter {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
 .card-count {
   font-weight: bold;
   color: #666;
@@ -107,9 +114,10 @@
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
   position: relative;
   width: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-item:hover {
@@ -127,6 +135,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   color: #555;
+  cursor: pointer;
 }
 
 .card-image img {
@@ -137,6 +146,7 @@
 
 .card-info {
   padding: 12px;
+  flex: 1;
 }
 
 .card-name {
@@ -156,18 +166,42 @@
 .card-level {
   font-size: 0.9rem;
   color: #666;
+  margin-bottom: 5px;
 }
 
 .card-quantity {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  font-size: 0.9rem;
+  color: #666;
   font-weight: bold;
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-size: 0.8rem;
+}
+
+/* 卡牌操作按钮 */
+.card-actions {
+  padding: 10px 12px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+.decompose-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.decompose-button:hover {
+  background-color: #c0392b;
+}
+
+.decompose-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 
 /* 稀有度样式 */
@@ -327,6 +361,162 @@
 .card-description p {
   line-height: 1.5;
   color: #555;
+}
+
+/* 卡牌详情页面的操作按钮 */
+.detail-actions {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+/* 分解对话框样式 */
+.decompose-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+}
+
+.decompose-dialog {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+}
+
+.decompose-dialog h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.decompose-info {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.decompose-info p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.decompose-controls {
+  margin-bottom: 15px;
+}
+
+.decompose-controls label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.quantity-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.quantity-input button {
+  width: 35px;
+  height: 35px;
+  border: 1px solid #ddd;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.quantity-input button:hover:not(:disabled) {
+  background-color: #e9ecef;
+}
+
+.quantity-input button:disabled {
+  background-color: #f8f9fa;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.quantity-input input {
+  width: 60px;
+  height: 35px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.decompose-reward {
+  background-color: #e8f5e8;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1px solid #c3e6c3;
+}
+
+.decompose-reward p {
+  margin: 0;
+  color: #2d5a2d;
+  font-weight: bold;
+}
+
+.decompose-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.confirm-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.confirm-button:hover:not(:disabled) {
+  background-color: #c0392b;
+}
+
+.cancel-button:disabled,
+.confirm-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 
 /* 响应式设计 */

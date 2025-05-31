@@ -10,7 +10,11 @@ function Inventory({ user, refreshUserData }) {
   const [error, setError] = useState('');
   const [selectedCard, setSelectedCard] = useState(null);
   const [showCardDetails, setShowCardDetails] = useState(false);
+  const [showDecomposeDialog, setShowDecomposeDialog] = useState(false);
+  const [decomposeQuantity, setDecomposeQuantity] = useState(1);
+  const [isDecomposing, setIsDecomposing] = useState(false);
   const [filterRarity, setFilterRarity] = useState('all');
+  const [sortBy, setSortBy] = useState('rarity');
   const [userData, setUserData] = useState(user || { gems: 0, coins: 0 });
   
   // 稀有度过滤选项
@@ -19,6 +23,14 @@ function Inventory({ user, refreshUserData }) {
     { value: 'common', label: '普通 (R)' },
     { value: 'rare', label: '稀有 (SR)' },
     { value: 'epic', label: '史诗 (SSR)' }
+  ];
+
+  // 排序选项
+  const sortOptions = [
+    { value: 'rarity', label: '稀有度' },
+    { value: 'level', label: '等级' },
+    { value: 'quantity', label: '数量' },
+    { value: 'name', label: '名称' }
   ];
   
   // 加载用户数据
@@ -101,11 +113,149 @@ function Inventory({ user, refreshUserData }) {
     setShowCardDetails(false);
     setSelectedCard(null);
   };
+
+  // 显示分解对话框
+  const showDecomposeConfirm = (card) => {
+    if (card.quantity <= 1) {
+      alert('该卡牌只有1张，无法分解！');
+      return;
+    }
+    setSelectedCard(card);
+    setDecomposeQuantity(1);
+    setShowDecomposeDialog(true);
+  };
+
+  // 关闭分解对话框
+  const closeDecomposeDialog = () => {
+    setShowDecomposeDialog(false);
+    setSelectedCard(null);
+    setDecomposeQuantity(1);
+  };
+
+  // 获取分解收益
+  const getDecomposeReward = (rarity, quantity) => {
+    let gemsPerCard = 0;
+    switch(rarity) {
+      case 'epic': // SSR
+      case 'SSR':
+        gemsPerCard = 100;
+        break;
+      case 'rare': // SR
+      case 'SR':
+        gemsPerCard = 50;
+        break;
+      case 'common': // R
+      case 'R':
+        gemsPerCard = 20;
+        break;
+      default: // N
+        gemsPerCard = 1;
+    }
+    return gemsPerCard * quantity;
+  };
+
+  // 执行卡牌分解
+  const confirmDecompose = async () => {
+    if (!selectedCard || decomposeQuantity <= 0) return;
+    
+    setIsDecomposing(true);
+    try {
+      console.log('发送分解请求:', {
+        cardId: selectedCard.id,
+        quantity: decomposeQuantity,
+        selectedCard: selectedCard
+      });
+      
+      const response = await axios.post('/api/user/cards/decompose', {
+        cardId: selectedCard.id,
+        quantity: decomposeQuantity
+      }, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      console.log('分解响应:', response.data);
+
+      if (response.data.success) {
+        // 更新用户资源
+        setUserData(prev => ({
+          ...prev,
+          gems: response.data.newUserResources.gems,
+          coins: response.data.newUserResources.coins
+        }));
+
+        // 更新卡牌列表
+        setCards(prev => prev.map(card => {
+          if (card.id === selectedCard.id) {
+            const newQuantity = card.quantity - decomposeQuantity;
+            return newQuantity > 0 ? { ...card, quantity: newQuantity } : null;
+          }
+          return card;
+        }).filter(Boolean));
+
+        // 如果有refreshUserData回调，调用它
+        if (refreshUserData) {
+          refreshUserData();
+        }
+
+        alert(response.data.message);
+        closeDecomposeDialog();
+      } else {
+        console.error('分解失败:', response.data);
+        alert(response.data.message || '分解失败');
+      }
+    } catch (err) {
+      console.error('分解卡牌失败:', err);
+      console.error('错误详情:', err.response?.data);
+      alert(err.response?.data?.message || '分解失败，请稍后再试');
+    } finally {
+      setIsDecomposing(false);
+    }
+  };
+
+  // 排序函数
+  const sortCards = (cards, sortBy) => {
+    const sortedCards = [...cards];
+    
+    switch(sortBy) {
+      case 'rarity':
+        return sortedCards.sort((a, b) => {
+          const rarityOrder = { 'epic': 0, 'rare': 1, 'common': 2 };
+          const orderA = rarityOrder[a.rarity] ?? 999;
+          const orderB = rarityOrder[b.rarity] ?? 999;
+          if (orderA !== orderB) return orderA - orderB;
+          return a.name.localeCompare(b.name);
+        });
+      
+      case 'level':
+        return sortedCards.sort((a, b) => {
+          if (b.level !== a.level) return b.level - a.level;
+          return a.name.localeCompare(b.name);
+        });
+      
+      case 'quantity':
+        return sortedCards.sort((a, b) => {
+          if (b.quantity !== a.quantity) return b.quantity - a.quantity;
+          return a.name.localeCompare(b.name);
+        });
+      
+      case 'name':
+        return sortedCards.sort((a, b) => a.name.localeCompare(b.name));
+      
+      default:
+        return sortedCards;
+    }
+  };
   
-  // 根据稀有度过滤卡牌
-  const filteredCards = filterRarity === 'all' 
-    ? cards 
-    : cards.filter(card => card.rarity === filterRarity);
+  // 根据稀有度过滤和排序卡牌
+  const processedCards = () => {
+    let filtered = filterRarity === 'all' 
+      ? cards 
+      : cards.filter(card => card.rarity === filterRarity);
+    
+    return sortCards(filtered, sortBy);
+  };
   
   // 稀有度中文名
   const getRarityName = (rarity) => {
@@ -117,6 +267,8 @@ function Inventory({ user, refreshUserData }) {
     }
   };
   
+  const filteredCards = processedCards();
+
   return (
     <div className="inventory-container">
       <div className="top-bar">
@@ -150,6 +302,20 @@ function Inventory({ user, refreshUserData }) {
               ))}
             </select>
           </div>
+          <div className="filter-group">
+            <label>排序：</label>
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)}
+              className="sort-filter"
+            >
+              {sortOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="card-count">
             {filteredCards.length} / {cards.length} 张卡牌
           </div>
@@ -171,9 +337,8 @@ function Inventory({ user, refreshUserData }) {
               <div 
                 key={card.id} 
                 className={`card-item rarity-${card.rarity}`}
-                onClick={() => viewCardDetails(card)}
               >
-                <div className="card-image">
+                <div className="card-image" onClick={() => viewCardDetails(card)}>
                   {card.image_url ? (
                     <img 
                       src={card.image_url} 
@@ -192,10 +357,19 @@ function Inventory({ user, refreshUserData }) {
                   <div className="card-name">{card.name}</div>
                   <div className="card-rarity">{getRarityName(card.rarity)}</div>
                   <div className="card-level">等级：{card.level}</div>
-                  {card.quantity > 1 && (
-                    <div className="card-quantity">x{card.quantity}</div>
-                  )}
+                  <div className="card-quantity">数量：{card.quantity}</div>
                 </div>
+                {card.quantity > 1 && (
+                  <div className="card-actions">
+                    <button 
+                      className="decompose-button"
+                      onClick={() => showDecomposeConfirm(card)}
+                      title="分解卡牌"
+                    >
+                      分解
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -268,7 +442,83 @@ function Inventory({ user, refreshUserData }) {
                   <h3>卡牌描述</h3>
                   <p>{selectedCard.description || '暂无描述'}</p>
                 </div>
+
+                {selectedCard.quantity > 1 && (
+                  <div className="detail-actions">
+                    <button 
+                      className="decompose-button"
+                      onClick={() => {
+                        closeCardDetails();
+                        showDecomposeConfirm(selectedCard);
+                      }}
+                    >
+                      分解卡牌
+                    </button>
+                  </div>
+                )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDecomposeDialog && selectedCard && (
+        <div className="decompose-dialog-overlay">
+          <div className="decompose-dialog">
+            <h3>分解卡牌</h3>
+            <div className="decompose-info">
+              <p>卡牌：{selectedCard.name}</p>
+              <p>稀有度：{getRarityName(selectedCard.rarity)}</p>
+              <p>拥有数量：{selectedCard.quantity}</p>
+            </div>
+            
+            <div className="decompose-controls">
+              <label>分解数量：</label>
+              <div className="quantity-input">
+                <button 
+                  onClick={() => setDecomposeQuantity(Math.max(1, decomposeQuantity - 1))}
+                  disabled={decomposeQuantity <= 1}
+                >
+                  -
+                </button>
+                <input 
+                  type="number" 
+                  value={decomposeQuantity}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 1;
+                    setDecomposeQuantity(Math.max(1, Math.min(selectedCard.quantity - 1, value)));
+                  }}
+                  min="1"
+                  max={selectedCard.quantity - 1}
+                />
+                <button 
+                  onClick={() => setDecomposeQuantity(Math.min(selectedCard.quantity - 1, decomposeQuantity + 1))}
+                  disabled={decomposeQuantity >= selectedCard.quantity - 1}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            
+            <div className="decompose-reward">
+              <p>将获得：{getDecomposeReward(selectedCard.original_rarity || selectedCard.rarity, decomposeQuantity)} 💎</p>
+            </div>
+            
+            <div className="decompose-actions">
+              <button 
+                className="cancel-button"
+                onClick={closeDecomposeDialog}
+                disabled={isDecomposing}
+              >
+                取消
+              </button>
+              <button 
+                className="confirm-button"
+                onClick={confirmDecompose}
+                disabled={isDecomposing}
+              >
+                {isDecomposing ? '分解中...' : '确认分解'}
+              </button>
             </div>
           </div>
         </div>
