@@ -20,6 +20,7 @@ CREATE TABLE users (
 CREATE TABLE card_pool_types (
     pool_type_id INT AUTO_INCREMENT PRIMARY KEY, -- 卡池类型唯一标识
     pool_type_name VARCHAR(50) NOT NULL UNIQUE,  -- 卡池类型名称（如普通池、限时池）
+    drop_rate_N FLOAT NOT NULL,                  -- N类卡掉落率
     drop_rate_R FLOAT NOT NULL,                  -- R类卡掉落率
     drop_rate_SR FLOAT NOT NULL,                 -- SR类卡掉落率
     drop_rate_SSR FLOAT NOT NULL,                -- SSR类卡掉落率
@@ -44,18 +45,21 @@ CREATE TABLE card_skills (
     skill_name VARCHAR(100) NOT NULL,        -- 技能名称
     skill_description TEXT,                  -- 技能描述
     skill_base_attack INT NOT NULL DEFAULT 0, -- 技能初始额外攻击力
-    skill_base_defense INT NOT NULL DEFAULT 0 -- 技能初始额外防御力
+    skill_base_defense INT NOT NULL DEFAULT 0, -- 技能初始额外防御力
+    skill_base_strike INT NOT NULL DEFAULT 0,  -- 技能大招初始攻击力
+    skill_base_recovery INT NOT NULL DEFAULT 0,  -- 技能初始恢复生命值
+    skill_base_block INT NOT NULL DEFAULT 0  -- 技能初始阻挡伤害值
 );
 
 -- 卡牌表：存储所有卡牌的基本信息
 CREATE TABLE cards (
     card_id INT AUTO_INCREMENT PRIMARY KEY, -- 卡牌唯一标识
     card_name VARCHAR(100) NOT NULL,        -- 卡牌名称
-    rarity ENUM('R', 'SR', 'SSR') NOT NULL, -- 卡牌稀有度
+    rarity ENUM('N', 'R', 'SR', 'SSR') NOT NULL, -- 卡牌稀有度
     card_type VARCHAR(50) NOT NULL,         -- 卡牌类型（如战士、法师、辅助等）
     image_url VARCHAR(255),                 -- 卡牌图片链接
     base_attack INT NOT NULL,               -- 卡牌基础攻击力属性
-    base_defemse INT NOT NULL,              -- 卡牌基础防御力属性
+    base_defense INT NOT NULL,              -- 卡牌基础防御力属性
     card_description TEXT,                  -- 卡牌描述
     card_skill INT,                         -- 卡牌拥有的技能ID
     FOREIGN KEY (card_skill) REFERENCES card_skills(skill_id) ON DELETE SET NULL -- 外键关联到技能表
@@ -90,6 +94,9 @@ CREATE TABLE card_skill_relation (
     skill_id INT NOT NULL,                       -- 技能ID
     skill_attack INT NOT NULL,                   -- 技能额外攻击力（随技能等级提升）
     skill_defense INT NOT NULL,                  -- 技能额外防御力（随技能等级提升）
+    skill_strike INT NOT NULL,                   -- 技能大招攻击力
+    skill_recovery INT NOT NULL,                 -- 技能恢复生命值
+    skill_block INT NOT NULL,                    -- 技能阻挡伤害值
     FOREIGN KEY (user_card_id) REFERENCES user_cards(user_card_id) ON DELETE CASCADE, -- 外键关联到用户卡牌表
     FOREIGN KEY (skill_id) REFERENCES card_skills(skill_id) ON DELETE CASCADE         -- 外键关联到技能表
 );
@@ -143,6 +150,7 @@ CREATE TABLE dungeon_enemies (
     is_boss BOOLEAN DEFAULT FALSE,           -- 是否为Boss
     enemy_attack INT,                        -- 敌人攻击力基础属性
     enemy_defense INT,                       -- 敌人防御力基础属性
+    image_url VARCHAR(255),                  -- 敌人图片链接
     FOREIGN KEY (dungeon_id) REFERENCES dungeons(dungeon_id) ON DELETE CASCADE
 );
 
