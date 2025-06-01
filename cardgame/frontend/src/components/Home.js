@@ -115,6 +115,11 @@ function Home() {
     navigate('/shop');
   };
   
+  // 导航到副本页面
+  const goToDungeons = () => {
+    navigate('/dungeons');
+  };
+  
   // 打开充值界面
   const openRechargeModal = () => {
     setShowRecharge(true);
@@ -234,7 +239,7 @@ function Home() {
             <div className="button-icon">📦</div>
             <div className="button-text">仓库</div>
           </button>
-          <button className="feature-button quest">
+          <button className="feature-button quest" onClick={goToDungeons}>
             <div className="button-icon">🏆</div>
             <div className="button-text">副本</div>
           </button>
