@@ -71,7 +71,7 @@ function App() {
         />
         <Route 
           path="/register" 
-          element={!isAuthenticated ? <Register /> : <Navigate to="/" />} 
+          element={!isAuthenticated ? <Register login={handleLogin} /> : <Navigate to="/" />} 
         />
         <Route 
           path="/" 
