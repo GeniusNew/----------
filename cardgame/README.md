@@ -47,7 +47,8 @@
    ```
    npm.cmd run dev
    ```
-
+cd C:\Users\a1867\Desktop\数据库大作业\cardgame\backend
+   npm.cmd run dev
 ### 前端设置
 
 创建一个`.env`文件：
@@ -72,5 +73,8 @@ npm.cmd install react-scripts@4.0.3
    ```
    npm.cmd start
    ```
+   cd  C:\Users\a1867\Desktop\数据库大作业\cardgame\frontend
+   npm.cmd start
+
 
 打开浏览器并访问`http://localhost:3000`
