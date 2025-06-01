@@ -2,6 +2,7 @@ const CardPool = require('../models/CardPool');
 const User = require('../models/User');
 const Card = require('../models/Card');
 const { pool } = require('../config/db');
+const { calculateAttack, calculateDefense } = require('../utils/cardGrowthCalculator');
 
 // 抽卡控制器
 const drawCards = async (req, res) => {
@@ -239,53 +240,60 @@ async function addCardToUserInventory(userId, cardId) {
     
     const card = cardInfo[0];
     
-    // 检查用户是否已有这张卡
-    const [userCardResult] = await pool.query(
-      'SELECT * FROM user_cards WHERE user_id = ? AND card_id = ?', 
+    // 检查用户是否已有这种卡牌，获取最高等级
+    const [existingCards] = await pool.query(
+      'SELECT MAX(level) as max_level FROM user_cards WHERE user_id = ? AND card_id = ?', 
       [userId, cardId]
     );
     
-    if (userCardResult.length > 0) {
-      // 用户已有该卡牌，增加数量
-      console.log(`用户${userId}已有卡牌${cardId}，添加一张新的`);
-      await pool.query(
-        'INSERT INTO user_cards (user_id, card_id, level, current_attack, current_defense) VALUES (?, ?, ?, ?, ?)',
-        [userId, cardId, 1, card.base_attack, card.base_defense || 0]
-      );
+    // 确定新卡牌的等级：如果用户已有同种卡牌，使用最高等级；否则使用1级
+    let newCardLevel = 1;
+    let newAttack = card.base_attack;
+    let newDefense = card.base_defense || 0;
+    
+    if (existingCards.length > 0 && existingCards[0].max_level) {
+      // 用户已有该卡牌，新卡牌等级同步到最高等级
+      newCardLevel = existingCards[0].max_level;
+      // 重新计算对应等级的属性
+      newAttack = calculateAttack(card.base_attack, card.rarity, newCardLevel);
+      newDefense = calculateDefense(card.base_defense || 0, card.rarity, newCardLevel);
+      
+      console.log(`用户${userId}已有卡牌${cardId}，新卡牌同步到等级${newCardLevel}，攻击:${newAttack}，防御:${newDefense}`);
     } else {
-      // 用户没有该卡牌，添加新记录
-      console.log(`用户${userId}没有卡牌${cardId}，添加第一张`);
-      await pool.query(
-        'INSERT INTO user_cards (user_id, card_id, level, current_attack, current_defense) VALUES (?, ?, ?, ?, ?)',
-        [userId, cardId, 1, card.base_attack, card.base_defense || 0]
+      console.log(`用户${userId}没有卡牌${cardId}，添加1级新卡牌`);
+    }
+    
+    // 添加新卡牌记录
+    await pool.query(
+      'INSERT INTO user_cards (user_id, card_id, level, current_attack, current_defense) VALUES (?, ?, ?, ?, ?)',
+      [userId, cardId, newCardLevel, newAttack, newDefense]
+    );
+    
+    // 如果卡牌有技能，添加技能关联
+    if (card.card_skill) {
+      // 获取新创建的user_card_id
+      const [newUserCard] = await pool.query(
+        'SELECT user_card_id FROM user_cards WHERE user_id = ? AND card_id = ? ORDER BY user_card_id DESC LIMIT 1',
+        [userId, cardId]
       );
       
-      // 如果卡牌有技能，添加技能关联
-      if (card.card_skill) {
-        // 获取新创建的user_card_id
-        const [newUserCard] = await pool.query(
-          'SELECT user_card_id FROM user_cards WHERE user_id = ? AND card_id = ? ORDER BY user_card_id DESC LIMIT 1',
-          [userId, cardId]
+      if (newUserCard.length > 0) {
+        const userCardId = newUserCard[0].user_card_id;
+        
+        // 获取技能信息
+        const [skillInfo] = await pool.query(
+          'SELECT * FROM card_skills WHERE skill_id = ?',
+          [card.card_skill]
         );
         
-        if (newUserCard.length > 0) {
-          const userCardId = newUserCard[0].user_card_id;
-          
-          // 获取技能信息
-          const [skillInfo] = await pool.query(
-            'SELECT * FROM card_skills WHERE skill_id = ?',
-            [card.card_skill]
+        if (skillInfo.length > 0) {
+          const skill = skillInfo[0];
+          // 添加卡牌技能关联
+          console.log(`为卡牌添加技能: 卡牌=${userCardId}, 技能=${skill.skill_id}`);
+          await pool.query(
+            'INSERT INTO card_skill_relation (user_card_id, skill_id, skill_attack, skill_defense) VALUES (?, ?, ?, ?)',
+            [userCardId, skill.skill_id, skill.skill_base_attack || 0, skill.skill_base_defense || 0]
           );
-          
-          if (skillInfo.length > 0) {
-            const skill = skillInfo[0];
-            // 添加卡牌技能关联
-            console.log(`为卡牌添加技能: 卡牌=${userCardId}, 技能=${skill.skill_id}`);
-            await pool.query(
-              'INSERT INTO card_skill_relation (user_card_id, skill_id, skill_attack, skill_defense) VALUES (?, ?, ?, ?)',
-              [userCardId, skill.skill_id, skill.skill_base_attack || 0, skill.skill_base_defense || 0]
-            );
-          }
         }
       }
     }
