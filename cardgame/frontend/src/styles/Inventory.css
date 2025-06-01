@@ -237,6 +237,10 @@
 }
 
 /* 稀有度样式 */
+.rarity-normal {
+  border: 2px solid #e8e8e8;
+}
+
 .rarity-common {
   border: 2px solid #a0a0a0;
 }
@@ -247,6 +251,10 @@
 
 .rarity-epic {
   border: 2px solid #c642d8;
+}
+
+.rarity-text-normal {
+  color: #808080;
 }
 
 .rarity-text-common {

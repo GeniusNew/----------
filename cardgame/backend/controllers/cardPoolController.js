@@ -23,29 +23,32 @@ const drawCards = async (req, res) => {
       });
     }
     
-    // 获取卡池概率
+    // 获取卡池概率 - 更新为新的概率配置：N 59%, R 30%, SR 10%, SSR 1%
     const rates = {
-      R: 0.6,
-      SR: 0.38,
-      SSR: 0.02
+      N: 0.59,
+      R: 0.30,
+      SR: 0.10,
+      SSR: 0.01
     };
     
     // 稀有度映射
     const rarityMap = {
-      'R': 'common',
+      'N': 'normal',
+      'R': 'common', 
       'SR': 'rare',
       'SSR': 'epic'
     };
     
     // 从数据库获取所有卡牌
     console.log('获取卡牌库...');
+    const [N_cards] = await pool.query('SELECT * FROM cards WHERE rarity = ?', ['N']);
     const [R_cards] = await pool.query('SELECT * FROM cards WHERE rarity = ?', ['R']);
     const [SR_cards] = await pool.query('SELECT * FROM cards WHERE rarity = ?', ['SR']);
     const [SSR_cards] = await pool.query('SELECT * FROM cards WHERE rarity = ?', ['SSR']);
     
-    console.log(`卡牌库统计: R卡${R_cards.length}张, SR卡${SR_cards.length}张, SSR卡${SSR_cards.length}张`);
+    console.log(`卡牌库统计: N卡${N_cards.length}张, R卡${R_cards.length}张, SR卡${SR_cards.length}张, SSR卡${SSR_cards.length}张`);
     
-    if (!R_cards.length && !SR_cards.length && !SSR_cards.length) {
+    if (!N_cards.length && !R_cards.length && !SR_cards.length && !SSR_cards.length) {
       console.log('卡牌库为空');
       return res.status(500).json({
         success: false,
@@ -72,7 +75,8 @@ const drawCards = async (req, res) => {
       console.log(`抽到稀有度: ${rarity}`);
       let cardPool;
       
-      if (rarity === 'R') cardPool = R_cards;
+      if (rarity === 'N') cardPool = N_cards;
+      else if (rarity === 'R') cardPool = R_cards;
       else if (rarity === 'SR') cardPool = SR_cards;
       else cardPool = SSR_cards;
       
@@ -81,8 +85,15 @@ const drawCards = async (req, res) => {
         console.log(`${rarity}稀有度没有卡牌，选择替代稀有度`);
         if (rarity === 'SSR' && SR_cards.length > 0) {
           cardPool = SR_cards;
-        } else {
+        } else if (rarity === 'SR' && R_cards.length > 0) {
           cardPool = R_cards;
+        } else if (rarity === 'R' && N_cards.length > 0) {
+          cardPool = N_cards;
+        } else {
+          // 找到任何可用的卡牌池
+          cardPool = SSR_cards.length > 0 ? SSR_cards : 
+                   SR_cards.length > 0 ? SR_cards : 
+                   R_cards.length > 0 ? R_cards : N_cards;
         }
       }
       
@@ -156,7 +167,8 @@ const drawCards = async (req, res) => {
         
         // 选择对应稀有度的卡牌池
         let cardPool;
-        if (rarity === 'R') cardPool = R_cards;
+        if (rarity === 'N') cardPool = N_cards;
+        else if (rarity === 'R') cardPool = R_cards;
         else if (rarity === 'SR') cardPool = SR_cards;
         else cardPool = SSR_cards;
         
@@ -166,9 +178,27 @@ const drawCards = async (req, res) => {
           if (rarity === 'SSR' && SR_cards.length > 0) {
             cardPool = SR_cards;
             rarity = 'SR';
-          } else {
+          } else if (rarity === 'SR' && R_cards.length > 0) {
             cardPool = R_cards;
             rarity = 'R';
+          } else if (rarity === 'R' && N_cards.length > 0) {
+            cardPool = N_cards;
+            rarity = 'N';
+          } else {
+            // 找到任何可用的卡牌池
+            if (SSR_cards.length > 0) {
+              cardPool = SSR_cards;
+              rarity = 'SSR';
+            } else if (SR_cards.length > 0) {
+              cardPool = SR_cards;
+              rarity = 'SR';
+            } else if (R_cards.length > 0) {
+              cardPool = R_cards;
+              rarity = 'R';
+            } else {
+              cardPool = N_cards;
+              rarity = 'N';
+            }
           }
         }
         
@@ -288,11 +318,19 @@ async function addCardToUserInventory(userId, cardId) {
         
         if (skillInfo.length > 0) {
           const skill = skillInfo[0];
-          // 添加卡牌技能关联
+          // 添加卡牌技能关联，包含所有技能字段的默认值
           console.log(`为卡牌添加技能: 卡牌=${userCardId}, 技能=${skill.skill_id}`);
           await pool.query(
-            'INSERT INTO card_skill_relation (user_card_id, skill_id, skill_attack, skill_defense) VALUES (?, ?, ?, ?)',
-            [userCardId, skill.skill_id, skill.skill_base_attack || 0, skill.skill_base_defense || 0]
+            'INSERT INTO card_skill_relation (user_card_id, skill_id, skill_attack, skill_defense, skill_strike, skill_recovery, skill_block) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [
+              userCardId, 
+              skill.skill_id, 
+              skill.skill_base_attack || 0, 
+              skill.skill_base_defense || 0,
+              skill.skill_base_strike || 0,
+              skill.skill_base_recovery || 0,
+              skill.skill_base_block || 0
+            ]
           );
         }
       }
@@ -306,12 +344,16 @@ async function addCardToUserInventory(userId, cardId) {
 // 根据概率获取随机稀有度
 function getRandomRarity(rates) {
   const rand = Math.random();
+  
+  // 累积概率计算
   if (rand < rates.SSR) {
     return 'SSR';
   } else if (rand < rates.SSR + rates.SR) {
     return 'SR';
-  } else {
+  } else if (rand < rates.SSR + rates.SR + rates.R) {
     return 'R';
+  } else {
+    return 'N';
   }
 }
 
@@ -330,9 +372,10 @@ const getCardPoolInfo = async (req, res) => {
         endTime: '2025-12-31'
       },
       rates: {
-        common: 60,    // 60% 几率
-        rare: 38,      // 38% 几率
-        epic: 2        // 2% 几率
+        normal: 59,
+        common: 30,
+        rare: 10,
+        epic: 1
       }
     };
     
@@ -392,9 +435,10 @@ const getCardPoolInfo = async (req, res) => {
             endTime: poolData.end_time
           },
           rates: {
-            common: 60,
-            rare: 38,
-            epic: 2
+            normal: 59,
+            common: 30,
+            rare: 10,
+            epic: 1
           }
         });
       }
@@ -414,9 +458,10 @@ const getCardPoolInfo = async (req, res) => {
           endTime: poolData.end_time
         },
         rates: {
-          common: 60,
-          rare: 38,
-          epic: 2
+          normal: 59,
+          common: 30,
+          rare: 10,
+          epic: 1
         }
       });
     }
@@ -432,6 +477,7 @@ const getCardPoolInfo = async (req, res) => {
         endTime: poolData.end_time
       },
       rates: {
+        normal: parseFloat((typeData.drop_rate_N * 100).toFixed(1)),
         common: parseFloat((typeData.drop_rate_R * 100).toFixed(1)),
         rare: parseFloat((typeData.drop_rate_SR * 100).toFixed(1)),
         epic: parseFloat((typeData.drop_rate_SSR * 100).toFixed(1))
@@ -452,9 +498,10 @@ const getCardPoolInfo = async (req, res) => {
         endTime: '2025-12-31'
       },
       rates: {
-        common: 60,
-        rare: 38,
-        epic: 2
+        normal: 59,
+        common: 30,
+        rare: 10,
+        epic: 1
       }
     });
   }

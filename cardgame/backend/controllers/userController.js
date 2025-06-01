@@ -274,6 +274,7 @@ const getUserCards = async (req, res) => {
     
     // 转换稀有度为前端展示格式
     const rarityMap = {
+      'N': 'normal',
       'R': 'common',
       'SR': 'rare',
       'SSR': 'epic'

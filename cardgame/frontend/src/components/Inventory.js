@@ -261,7 +261,8 @@ function Inventory({ user, refreshUserData }) {
   // 稀有度中文名
   const getRarityName = (rarity) => {
     switch(rarity) {
-      case 'common': return '普通 (R)';
+      case 'normal': return '普通 (N)';
+      case 'common': return '常见 (R)';
       case 'rare': return '稀有 (SR)';
       case 'epic': return '史诗 (SSR)';
       default: return rarity;

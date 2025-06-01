@@ -94,6 +94,10 @@
 }
 
 /* 稀有度边框样式 */
+.rarity-normal {
+  border: 3px solid #e8e8e8;
+}
+
 .rarity-common {
   border: 3px solid #a0a0a0;
 }

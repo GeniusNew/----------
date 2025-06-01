@@ -102,7 +102,8 @@ function CardPool({ user: userProp, refreshUserData }) {
   // 稀有度中文名
   const getRarityName = (rarity) => {
     switch(rarity) {
-      case 'common': return '普通 (R)';
+      case 'normal': return '普通 (N)';
+      case 'common': return '常见 (R)';
       case 'rare': return '稀有 (SR)';
       case 'epic': return '史诗 (SSR)';
       default: return rarity;
@@ -237,16 +238,20 @@ function CardPool({ user: userProp, refreshUserData }) {
               
               <div className="rates-info">
                 <div className="rate-item">
-                  <div className="rate-label">普通 (R):</div>
-                  <div className="rate-value">{rates.common}%</div>
+                  <div className="rate-label">普通 (N):</div>
+                  <div className="rate-value">{rates.normal || 59}%</div>
+                </div>
+                <div className="rate-item">
+                  <div className="rate-label">常见 (R):</div>
+                  <div className="rate-value">{rates.common || 30}%</div>
                 </div>
                 <div className="rate-item">
                   <div className="rate-label">稀有 (SR):</div>
-                  <div className="rate-value">{rates.rare}%</div>
+                  <div className="rate-value">{rates.rare || 10}%</div>
                 </div>
                 <div className="rate-item">
                   <div className="rate-label">史诗 (SSR):</div>
-                  <div className="rate-value">{rates.epic}%</div>
+                  <div className="rate-value">{rates.epic || 1}%</div>
                 </div>
               </div>
             </div>
