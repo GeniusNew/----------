@@ -9,6 +9,7 @@ import Inventory from './components/Inventory';
 import Cultivate from './components/Cultivate';
 import Shop from './components/Shop';
 import Dungeons from './components/Dungeons';
+import PlantSelection from './components/PlantSelection';
 import './styles/App.css';
 
 function App() {
@@ -97,6 +98,10 @@ function App() {
         <Route 
           path="/dungeons" 
           element={isAuthenticated ? <Dungeons user={user} refreshUserData={fetchUserData} /> : <Navigate to="/login" />} 
+        />
+        <Route 
+          path="/plant-selection/:dungeonId" 
+          element={isAuthenticated ? <PlantSelection user={user} refreshUserData={fetchUserData} /> : <Navigate to="/login" />} 
         />
       </Routes>
     </div>

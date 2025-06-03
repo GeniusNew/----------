@@ -84,9 +84,11 @@ function Dungeons({ user, refreshUserData }) {
     setSelectedDungeon(null);
   };
 
-  // 进入副本（暂时只显示提示）
+  // 进入副本（导航到植物选择界面）
   const enterDungeon = (dungeon) => {
-    alert(`即将进入副本：${dungeon.dungeon_name}\n此功能开发中...`);
+    navigate(`/plant-selection/${dungeon.dungeon_id}`, { 
+      state: { dungeon } 
+    });
   };
 
   // 返回主页
