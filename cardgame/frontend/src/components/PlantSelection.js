@@ -13,7 +13,6 @@ function PlantSelection() {
   const [selectedCards, setSelectedCards] = useState(Array(8).fill(null)); // 8个槽位
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedSlot, setSelectedSlot] = useState(null);
 
   // 获取用户卡牌
   useEffect(() => {
@@ -42,25 +41,30 @@ function PlantSelection() {
     fetchUserCards();
   }, []);
 
-  // 选择卡牌
+  // 选择卡牌 - 修改为自动填入下一个空槽位
   const selectCard = (card) => {
-    if (selectedSlot !== null) {
-      // 检查该卡牌是否已经在其他槽位中
-      const isAlreadySelected = selectedCards.some((selectedCard, index) => 
-        selectedCard && selectedCard.id === card.id && index !== selectedSlot
-      );
-      
-      if (!isAlreadySelected) {
-        const newSelectedCards = [...selectedCards];
-        newSelectedCards[selectedSlot] = card;
-        setSelectedCards(newSelectedCards);
-        setSelectedSlot(null);
-      } else {
-        alert('该卡牌已被选择！');
-      }
-    } else {
-      alert('请先选择一个槽位！');
+    // 检查该卡牌是否已经在槽位中
+    const isAlreadySelected = selectedCards.some(selectedCard => 
+      selectedCard && selectedCard.id === card.id
+    );
+    
+    if (isAlreadySelected) {
+      alert('该卡牌已被选择！');
+      return;
     }
+
+    // 找到第一个空槽位
+    const emptySlotIndex = selectedCards.findIndex(slot => slot === null);
+    
+    if (emptySlotIndex === -1) {
+      alert('所有槽位已满！');
+      return;
+    }
+
+    // 将卡牌放入第一个空槽位
+    const newSelectedCards = [...selectedCards];
+    newSelectedCards[emptySlotIndex] = card;
+    setSelectedCards(newSelectedCards);
   };
 
   // 移除卡牌
@@ -130,8 +134,7 @@ function PlantSelection() {
           {selectedCards.map((card, index) => (
             <div 
               key={index}
-              className={`card-slot ${selectedSlot === index ? 'selected' : ''} ${card ? 'filled' : ''}`}
-              onClick={() => setSelectedSlot(index)}
+              className={`card-slot ${card ? 'filled' : ''}`}
             >
               {card ? (
                 <div className="slot-card">
@@ -157,7 +160,7 @@ function PlantSelection() {
               ) : (
                 <div className="empty-slot">
                   <span className="slot-number">{index + 1}</span>
-                  <span className="slot-text">点击选择</span>
+                  <span className="slot-text">空槽位</span>
                 </div>
               )}
             </div>
