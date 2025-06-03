@@ -24,18 +24,28 @@ SET @skill_recovery_id = (SELECT skill_id FROM card_skills WHERE skill_name = '�
 SET @skill_block_id = (SELECT skill_id FROM card_skills WHERE skill_name = '伤害免疫');
 
 -- 创建10张卡，使用ON DUPLICATE KEY UPDATE以防卡牌名重复
-INSERT INTO cards (card_name, rarity, card_type, base_attack, base_defense, card_description, card_skill)
+INSERT INTO cards (card_name, rarity, card_type, base_attack, base_defense, card_description, card_skill, image_url)
 VALUES
-    ('BombardiroCrocodilo', 'R', 'AI Creatures', 500, 5000, 'BombardiroCrocodilo', @skill_attack_id), 
-    ('BonecaAmbalam', 'N', 'AI Creatures', 200, 2500, 'BonecaAmbalam', NULL), 
-    ('BrrBrrPatapim', 'N', 'AI Creatures', 150, 3000, 'BrrBrrPatapim', NULL), 
-    ('LaVaccaSaturnoSaturnita', 'N', 'AI Creatures', 200, 2500, 'LaVaccaSaturnoSaturnita', NULL), 
-    ('ShinpanzinniBananini', 'R', 'AI Creatures', 400, 4000, 'ShinpanzinniBananini', @skill_recovery_id), 
-    ('CabucinaAssasino', 'R', 'AI Creatures', 600, 4000, 'CabucinaAssasino', @skill_defense_id), 
-    ('LiriliLarila', 'SR', 'AI Creatures', 600, 6000, 'LiriliLarila', @skill_block_id), 
-    ('LuLuShiJianDaoLe', 'SR', 'AI Creatures', 800, 5000, 'LuLuShiJianDaoLe', @skill_attack_id), 
-    ('TralaleroTralala', 'R', 'AI Creatures', 400, 4500, 'TralaleroTralala', @skill_block_id), 
-    ('TungTungTungSahur', 'SSR', 'AI Creatures', 700, 5500, 'TungTungTungSahur', @skill_strike_id)
+    ('BombardiroCrocodilo', 'R', 'AI Creatures', 500, 5000, 'BombardiroCrocodilo', @skill_attack_id, '/images/cards/BombardiroCrocodilo.jpg'), 
+    ('BonecaAmbalam', 'N', 'AI Creatures', 200, 2500, 'BonecaAmbalam', NULL, '/images/cards/BonecaAmbalam.jpg'), 
+    ('BrrBrrPatapim', 'N', 'AI Creatures', 150, 3000, 'BrrBrrPatapim', NULL, '/images/cards/BrrBrrPatapim.jpg'), 
+    ('LaVaccaSaturnoSaturnita', 'N', 'AI Creatures', 200, 2500, 'LaVaccaSaturnoSaturnita', NULL, '/images/cards/LaVaccaSaturnoSaturnita.jpg'), 
+    ('ShinpanzinniBananini', 'R', 'AI Creatures', 400, 4000, 'ShinpanzinniBananini', @skill_recovery_id, '/images/cards/ShinpanzinniBananini.jpg'), 
+    ('CabucinaAssasino', 'R', 'AI Creatures', 600, 4000, 'CabucinaAssasino', @skill_defense_id, '/images/cards/CabucinaAssasino.jpg'), 
+    ('LiriliLarila', 'SR', 'AI Creatures', 600, 6000, 'LiriliLarila', @skill_block_id, '/images/cards/LiriliLarila.jpg'), 
+    ('LuLuShiJianDaoLe', 'SR', 'AI Creatures', 800, 5000, 'LuLuShiJianDaoLe', @skill_attack_id, '/images/cards/LuLuShiJianDaoLe.jpg'), 
+    ('TralaleroTralala', 'R', 'AI Creatures', 400, 4500, 'TralaleroTralala', @skill_block_id, '/images/cards/TralaleroTralala.jpg'), 
+    ('TungTungTungSahur', 'SSR', 'AI Creatures', 700, 5500, 'TungTungTungSahur', @skill_strike_id, '/images/cards/TungTungTungSahur.jpg'),
+    ('大姐丘', 'N', 'Hunter', 200, 2500, '大姐丘', NULL, '/images/cards/hunter_1.jpg'),
+    ('飞坦丘', 'R', 'Hunter', 650, 2500, '飞坦丘', @skill_attack_id, '/images/cards/hunter_2.jpg'),
+    ('柯特丘', 'N', 'Hunter', 150, 3000, '柯特丘', NULL, '/images/cards/hunter_3.jpg'),
+    ('酷拉丘', 'R', 'Hunter', 500, 2500, '酷拉丘', @skill_attack_id, '/images/cards/hunter_4.jpg'),
+    ('奇犽丘', 'SSR', 'Hunter', 850, 4500, '奇犽丘', @skill_strike_id, '/images/cards/hunter_5.jpg'),
+    ('团丘', 'N', 'Hunter', 200, 2500, '团丘', NULL, '/images/cards/hunter_6.jpg'),
+    ('西索丘', 'SR', 'Hunter', 650, 5500, '西索丘', @skill_block_id, '/images/cards/hunter_7.jpg'),
+    ('亚路丘', 'SR', 'Hunter', 600, 4500, '亚路丘', @skill_recovery_id, '/images/cards/hunter_8.jpg')
+
+
 ON DUPLICATE KEY UPDATE 
     rarity = VALUES(rarity),
     card_type = VALUES(card_type),
@@ -97,6 +107,47 @@ INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
 SELECT @pool_id, card_id
 FROM cards
 WHERE card_name = 'TungTungTungSahur';
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '大姐丘';
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '飞坦丘';
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '柯特丘';
+
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '酷拉丘';
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '奇犽丘';
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '团丘';
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '西索丘';
+
+INSERT IGNORE INTO card_pool_cards (pool_id, card_id)
+SELECT @pool_id, card_id
+FROM cards
+WHERE card_name = '亚路丘';
 
 -- 创建特殊物品表
 CREATE TABLE IF NOT EXISTS enhancement_items (
