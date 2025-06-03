@@ -314,10 +314,10 @@
     0 0 10px rgba(220, 20, 60, 0.6);
 }
 
-/* 战斗控制区域 - 更加突出 */
+/* 更新战斗控制区域，恢复原样式 */
 .battle-controls {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .start-battle-btn {
@@ -491,13 +491,14 @@
 
 .selectable-card .card-info {
   text-align: center;
+  position: relative;
 }
 
 .selectable-card .card-name {
   font-weight: 900;
   font-size: 1rem;
   color: white;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   text-shadow: 
     1px 1px 0px #000,
     2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -536,6 +537,32 @@
   font-size: 0.85rem;
   color: #FFD700;
   font-weight: 900;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.selectable-card .card-quantity {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(145deg, #FF6347 0%, #DC143C 100%);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 10px;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  z-index: 5;
+  border: 1px solid #FFD700;
+}
+
+.selectable-card .card-type {
+  font-size: 0.8rem;
+  color: #98FB98;
+  margin-bottom: 5px;
+  font-weight: 600;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
@@ -691,6 +718,13 @@
     padding: 15px 35px;
     font-size: 1.2rem;
   }
+  
+  .selectable-card .card-quantity {
+    font-size: 0.75rem;
+    padding: 2px 5px;
+    bottom: 8px;
+    right: 8px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -740,5 +774,103 @@
   .start-battle-btn {
     padding: 12px 25px;
     font-size: 1rem;
+  }
+  
+  .selectable-card .card-quantity {
+    font-size: 0.7rem;
+    padding: 1px 4px;
+    bottom: 5px;
+    right: 5px;
+  }
+}
+
+/* 排序控制区样式 */
+.sort-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, 
+    rgba(34, 139, 34, 0.25) 0%, 
+    rgba(139, 69, 19, 0.25) 100%);
+  border-top: 2px solid rgba(139, 69, 19, 0.4);
+  border-bottom: 2px solid rgba(139, 69, 19, 0.4);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sort-controls label {
+  color: #FFD700;
+  font-weight: 900;
+  font-size: 1.1rem;
+  text-shadow: 
+    2px 2px 0px #8B4513,
+    3px 3px 6px rgba(0, 0, 0, 0.7);
+  margin-right: 10px;
+}
+
+.sort-select {
+  background: linear-gradient(145deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+  color: white;
+  border: 2px solid #FFD700;
+  padding: 8px 15px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 3px rgba(255, 255, 255, 0.3);
+  outline: none;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.sort-select:hover {
+  background: linear-gradient(145deg, #A0522D 0%, #8B4513 50%, #A0522D 100%);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    0 0 10px rgba(255, 215, 0, 0.2),
+    inset 0 1px 3px rgba(255, 255, 255, 0.4);
+}
+
+.sort-select:focus {
+  border-color: #00FF00;
+  box-shadow: 
+    0 0 15px rgba(0, 255, 0, 0.5),
+    inset 0 1px 3px rgba(255, 255, 255, 0.4);
+}
+
+.sort-select option {
+  background-color: #5D4037;
+  color: white;
+  font-weight: 600;
+}
+
+/* 响应式设计调整 */
+@media (max-width: 768px) {
+  .sort-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .start-battle-btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sort-controls label {
+    font-size: 0.9rem;
+  }
+  
+  .sort-select {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .start-battle-btn {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    border-radius: 20px;
   }
 } 
