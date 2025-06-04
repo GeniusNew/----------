@@ -12,6 +12,7 @@ function CardPool({ user: userProp, refreshUserData }) {
   const [cardPool, setCardPool] = useState(null);
   const [rates, setRates] = useState({ common: 0, rare: 0, epic: 0 });
   const [error, setError] = useState('');
+  const [animate, setAnimate] = useState(false);
   
   // 卡池费用
   const costs = {
@@ -110,6 +111,17 @@ function CardPool({ user: userProp, refreshUserData }) {
     }
   };
   
+  // 稀有度图标
+  const getRarityIcon = (rarity) => {
+    switch(rarity) {
+      case 'normal': return <i className="material-icons rarity-icon">stars</i>;
+      case 'common': return <i className="material-icons rarity-icon">auto_awesome</i>;
+      case 'rare': return <i className="material-icons rarity-icon">auto_awesome_motion</i>;
+      case 'epic': return <i className="material-icons rarity-icon">diamond</i>;
+      default: return null;
+    }
+  };
+  
   // 返回主页
   const goToHome = () => {
     navigate('/');
@@ -130,6 +142,10 @@ function CardPool({ user: userProp, refreshUserData }) {
     try {
       setIsLoading(true);
       setError('');
+      
+      // 添加动画效果
+      setAnimate(true);
+      setTimeout(() => setAnimate(false), 800);
       
       const response = await axios.post('/api/cardpool/draw', 
         { drawType: 'single' },
@@ -173,6 +189,10 @@ function CardPool({ user: userProp, refreshUserData }) {
       setIsLoading(true);
       setError('');
       
+      // 添加动画效果
+      setAnimate(true);
+      setTimeout(() => setAnimate(false), 800);
+      
       const response = await axios.post('/api/cardpool/draw', 
         { drawType: 'ten' },
         {
@@ -212,57 +232,76 @@ function CardPool({ user: userProp, refreshUserData }) {
 
   return (
     <div className="card-pool-container">
+      {/* Material图标库CDN */}
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      <div className="hexagon-bg"></div>
+      
       <div className="top-bar">
-        <button className="back-button" onClick={goToHome}>返回</button>
+        <button className="back-button" onClick={goToHome}>
+          <i className="material-icons">arrow_back</i> 返回
+        </button>
         <div className="page-title">卡池抽取</div>
         <div className="resources">
           <div className="resource">
-            <span className="resource-icon">💎</span>
+            <i className="material-icons">diamond</i>
             <span className="resource-value">{user?.gems || 0}</span>
           </div>
           <div className="resource">
-            <span className="resource-icon">🪙</span>
+            <i className="material-icons">monetization_on</i>
             <span className="resource-value">{user?.coins || 0}</span>
           </div>
         </div>
       </div>
       
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message">
+          <i className="material-icons">error</i> {error}
+        </div>
+      )}
       
       <div className="card-pool-content">
         {cardPool ? (
           <>
             <div className="card-pool-info">
-              <h2>{cardPool.name}</h2>
+              <div className="grid-lines"></div>
+              <div className="pool-header">
+                <h2>{cardPool.name}</h2>
+                <div className="pool-decoration"></div>
+              </div>
               <p>{cardPool.description}</p>
               
               <div className="rates-info">
                 <div className="rate-item">
-                  <div className="rate-label">普通 (N):</div>
+                  <i className="material-icons">stars</i>
+                  <div className="rate-label">普通 (N)</div>
                   <div className="rate-value">{rates.normal || 59}%</div>
                 </div>
                 <div className="rate-item">
-                  <div className="rate-label">常见 (R):</div>
+                  <i className="material-icons">auto_awesome</i>
+                  <div className="rate-label">常见 (R)</div>
                   <div className="rate-value">{rates.common || 30}%</div>
                 </div>
                 <div className="rate-item">
-                  <div className="rate-label">稀有 (SR):</div>
+                  <i className="material-icons">auto_awesome_motion</i>
+                  <div className="rate-label">稀有 (SR)</div>
                   <div className="rate-value">{rates.rare || 10}%</div>
                 </div>
                 <div className="rate-item">
-                  <div className="rate-label">史诗 (SSR):</div>
+                  <i className="material-icons">diamond</i>
+                  <div className="rate-label">史诗 (SSR)</div>
                   <div className="rate-value">{rates.epic || 1}%</div>
                 </div>
               </div>
             </div>
             
-            <div className="draw-buttons">
+            <div className={`draw-buttons ${animate ? 'animate' : ''}`}>
               <button 
                 className="draw-button single-draw" 
                 onClick={singleDraw} 
                 disabled={isLoading}
               >
-                单抽 (💎 {costs.singleDraw.gems})
+                <i className="material-icons">flash_on</i>
+                单抽 <i className="material-icons small-icon">diamond</i> {costs.singleDraw.gems}
               </button>
               
               <button 
@@ -270,20 +309,23 @@ function CardPool({ user: userProp, refreshUserData }) {
                 onClick={tenDraw} 
                 disabled={isLoading}
               >
-                十连抽 (💎 {costs.tenDraw.gems})
+                <i className="material-icons">auto_awesome_mosaic</i>
+                十连抽 <i className="material-icons small-icon">diamond</i> {costs.tenDraw.gems}
               </button>
             </div>
             
             <button className="inventory-button" onClick={goToInventory}>
-              查看仓库
+              <i className="material-icons">inventory_2</i> 查看仓库
             </button>
           </>
         ) : (
           <div className="card-pool-unavailable">
+            <div className="grid-lines"></div>
+            <i className="material-icons large-icon">error_outline</i>
             <h2>卡池暂时不可用</h2>
             <p>无法加载卡池数据，请稍后再试</p>
             <button className="inventory-button" onClick={goToInventory}>
-              查看仓库
+              <i className="material-icons">inventory_2</i> 查看仓库
             </button>
           </div>
         )}
@@ -293,12 +335,14 @@ function CardPool({ user: userProp, refreshUserData }) {
         <div className="loading-overlay">
           <div className="loading-spinner"></div>
           <p>抽取中...</p>
+          <div className="loader-sparkles"></div>
         </div>
       )}
       
       {showResults && (
         <div className="results-container">
           <div className="results-content">
+            <div className="grid-lines"></div>
             <h2>抽卡结果</h2>
             <div className="cards-grid">
               {drawResults.map((card, index) => (
@@ -316,17 +360,27 @@ function CardPool({ user: userProp, refreshUserData }) {
                         e.target.onerror = null; // 防止无限循环
                       }}
                     />
+                    <div className="card-shine"></div>
+                    <div className="rarity-badge">
+                      {getRarityIcon(card.rarity)}
+                    </div>
                   </div>
                   <div className="card-info">
                     <div className="card-name">{card.name}</div>
-                    <div className="card-rarity">{getRarityName(card.rarity)}</div>
+                    <div className="card-rarity">
+                      {getRarityName(card.rarity)}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
             <div className="results-actions">
-              <button className="close-results" onClick={closeResults}>关闭</button>
-              <button className="view-inventory" onClick={goToInventory}>查看仓库</button>
+              <button className="close-results" onClick={closeResults}>
+                <i className="material-icons">close</i> 关闭
+              </button>
+              <button className="view-inventory" onClick={goToInventory}>
+                <i className="material-icons">inventory_2</i> 查看仓库
+              </button>
             </div>
           </div>
         </div>
@@ -335,4 +389,4 @@ function CardPool({ user: userProp, refreshUserData }) {
   );
 }
 
-export default CardPool; 
+export default CardPool;
