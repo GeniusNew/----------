@@ -242,6 +242,7 @@ function Cultivate({ user, refreshUserData }) {
   
   return (
     <div className="cultivate-container">
+      <div className="hexagon-bg"></div>
       <div className="top-bar">
         <button className="back-button" onClick={goBack}>返回仓库</button>
         <div className="page-title">卡牌培养</div>
