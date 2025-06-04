@@ -182,13 +182,15 @@
   align-items: center;
   margin-bottom: 20px;
   padding: 10px 15px;
-  background: rgba(59, 80, 107, 0.8);
+  background: var(--medium-bg);
+  background: linear-gradient(135deg, #1c2541, #283663);
   border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--accent-color);
   position: relative;
   overflow: hidden;
+  color: var(--text-light);
 }
 
 .filter-bar::before {
@@ -199,8 +201,8 @@
   width: 100%;
   height: 100%;
   background-image:
-    linear-gradient(rgba(91, 192, 190, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(91, 192, 190, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(91, 192, 190, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 192, 190, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
   pointer-events: none;
   z-index: -1;
