@@ -269,12 +269,29 @@ function Inventory({ user, refreshUserData }) {
     }
   };
   
+  // 稀有度图标
+  const getRarityIcon = (rarity) => {
+    switch(rarity) {
+      case 'normal': return <i className="material-icons rarity-icon">stars</i>;
+      case 'common': return <i className="material-icons rarity-icon">auto_awesome</i>;
+      case 'rare': return <i className="material-icons rarity-icon">auto_awesome_motion</i>;
+      case 'epic': return <i className="material-icons rarity-icon">diamond</i>;
+      default: return null;
+    }
+  };
+  
   const filteredCards = processedCards();
 
   return (
     <div className="inventory-container">
+      {/* Material图标库CDN */}
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      <div className="hexagon-bg"></div>
+      
       <div className="top-bar">
-        <button className="back-button" onClick={goToHome}>返回</button>
+        <button className="back-button" onClick={goToHome}>
+          <i className="material-icons">arrow_back</i> 返回
+        </button>
         <div className="page-title">卡牌仓库</div>
         <div className="resources">
           <div className="resource">
@@ -335,9 +352,14 @@ function Inventory({ user, refreshUserData }) {
         </div>
         
         {isLoading ? (
-          <div className="loading-message">加载中...</div>
+          <div className="loading-message">
+            <div className="loading-spinner"></div>
+            加载中...
+          </div>
         ) : error ? (
-          <div className="error-message">{error}</div>
+          <div className="error-message">
+            <i className="material-icons">error</i> {error}
+          </div>
         ) : filteredCards.length === 0 ? (
           <div className="empty-message">
             {filterRarity === 'all' 
@@ -365,6 +387,10 @@ function Inventory({ user, refreshUserData }) {
                   ) : (
                     card.name.charAt(0)
                   )}
+                  <div className="card-shine"></div>
+                  <div className="rarity-badge">
+                    {getRarityIcon(card.rarity)}
+                  </div>
                 </div>
                 <div className="card-info">
                   <div className="card-name">{card.name}</div>
@@ -379,7 +405,7 @@ function Inventory({ user, refreshUserData }) {
                       onClick={() => showDecomposeConfirm(card)}
                       title="分解卡牌"
                     >
-                      分解
+                      <i className="material-icons">delete_outline</i> 分解
                     </button>
                   </div>
                 )}
@@ -415,6 +441,9 @@ function Inventory({ user, refreshUserData }) {
                 ) : (
                   selectedCard.name.charAt(0)
                 )}
+                <div className="rarity-badge">
+                  {getRarityIcon(selectedCard.rarity)}
+                </div>
               </div>
               
               <div className="card-detail-info">
@@ -481,7 +510,7 @@ function Inventory({ user, refreshUserData }) {
                       navigate('/cultivate', { state: { selectedCard } });
                     }}
                   >
-                    培养
+                    <i className="material-icons">auto_fix_high</i> 培养
                   </button>
                 </div>
               </div>
