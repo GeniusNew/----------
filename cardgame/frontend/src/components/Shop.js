@@ -167,8 +167,14 @@ function Shop({ user, refreshUserData }) {
 
   return (
     <div className="shop-container">
+      {/* Material图标库CDN */}
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      <div className="hexagon-bg"></div>
+      
       <div className="top-bar">
-        <button className="back-button" onClick={goToHome}>返回</button>
+        <button className="back-button" onClick={goToHome}>
+          <i className="material-icons">arrow_back</i> 返回
+        </button>
         <div className="page-title">商店</div>
         <div className="resources">
           <div className="resource">
@@ -204,11 +210,16 @@ function Shop({ user, refreshUserData }) {
         </div>
         
         {isLoading ? (
-          <div className="loading-message">加载中...</div>
+          <div className="loading-message">
+            <i className="material-icons">hourglass_top</i> 加载中...
+          </div>
         ) : error ? (
-          <div className="error-message">{error}</div>
+          <div className="error-message">
+            <i className="material-icons">error</i> {error}
+          </div>
         ) : filteredItems.length === 0 ? (
           <div className="empty-message">
+            <i className="material-icons">info</i>
             {selectedCategory === 'all' 
               ? '商店暂时没有商品' 
               : `该分类下暂无商品`}
@@ -225,7 +236,8 @@ function Shop({ user, refreshUserData }) {
                   <div className="item-name">{item.name}</div>
                   <div className="item-description">{item.description}</div>
                   <div className="item-reward">
-                    奖励：{getRewardDescription(item)}
+                    <i className="material-icons">card_giftcard</i> 
+                    {getRewardDescription(item)}
                   </div>
                 </div>
                 <div className="item-footer">
@@ -238,7 +250,9 @@ function Shop({ user, refreshUserData }) {
                     onClick={() => showPurchaseConfirm(item)}
                     disabled={userData.gems < item.gems_cost}
                   >
-                    {userData.gems >= item.gems_cost ? '购买' : '钻石不足'}
+                    {userData.gems >= item.gems_cost ? 
+                      <><i className="material-icons">shopping_cart</i> 购买</> : 
+                      <><i className="material-icons">money_off</i> 钻石不足</>}
                   </button>
                 </div>
               </div>
@@ -268,7 +282,7 @@ function Shop({ user, refreshUserData }) {
                   onClick={() => setPurchaseQuantity(Math.max(1, purchaseQuantity - 1))}
                   disabled={purchaseQuantity <= 1}
                 >
-                  -
+                  <i className="material-icons">remove</i>
                 </button>
                 <input 
                   type="number" 
@@ -283,7 +297,7 @@ function Shop({ user, refreshUserData }) {
                   onClick={() => setPurchaseQuantity(purchaseQuantity + 1)}
                   disabled={userData.gems < getTotalCost(selectedItem, purchaseQuantity + 1)}
                 >
-                  +
+                  <i className="material-icons">add</i>
                 </button>
               </div>
             </div>
@@ -291,7 +305,10 @@ function Shop({ user, refreshUserData }) {
             <div className="purchase-summary">
               <div className="summary-row">
                 <span>获得奖励：</span>
-                <span className="reward-text">{getRewardDescription(selectedItem, purchaseQuantity)}</span>
+                <span className="reward-text">
+                  <i className="material-icons">card_giftcard</i>
+                  {getRewardDescription(selectedItem, purchaseQuantity)}
+                </span>
               </div>
               <div className="summary-row">
                 <span>总花费：</span>
@@ -313,7 +330,7 @@ function Shop({ user, refreshUserData }) {
                 onClick={closePurchaseDialog}
                 disabled={isPurchasing}
               >
-                取消
+                <i className="material-icons">cancel</i> 取消
               </button>
               <button 
                 className="confirm-button"
@@ -323,7 +340,9 @@ function Shop({ user, refreshUserData }) {
                   userData.gems < getTotalCost(selectedItem, purchaseQuantity)
                 }
               >
-                {isPurchasing ? '购买中...' : '确认购买'}
+                {isPurchasing ? 
+                  <><i className="material-icons">hourglass_top</i> 购买中...</> : 
+                  <><i className="material-icons">check_circle</i> 确认购买</>}
               </button>
             </div>
           </div>
