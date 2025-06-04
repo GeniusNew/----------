@@ -253,7 +253,7 @@ function PlantSelection() {
         <button onClick={goBack} className="back-button">
           ← 返回副本选择
         </button>
-        <h1>选择你的植物</h1>
+        <h1>选择你的卡牌</h1>
         <div className="dungeon-info">
           <span className="dungeon-name">{dungeon?.dungeon_name || '未知副本'}</span>
         </div>
