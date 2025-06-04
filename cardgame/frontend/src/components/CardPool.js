@@ -132,6 +132,12 @@ function CardPool({ user: userProp, refreshUserData }) {
     navigate('/inventory');
   };
   
+  // 打开充值界面
+  const openRechargeModal = () => {
+    // 导航到主页并打开充值模态窗口
+    navigate('/', { state: { openRecharge: true } });
+  };
+
   // 单抽功能
   const singleDraw = async () => {
     if (user.gems < costs.singleDraw.gems) {
@@ -243,11 +249,12 @@ function CardPool({ user: userProp, refreshUserData }) {
         <div className="page-title">卡池抽取</div>
         <div className="resources">
           <div className="resource">
-            <i className="material-icons">diamond</i>
+            <span className="resource-icon">💎</span>
             <span className="resource-value">{user?.gems || 0}</span>
+            <button className="recharge-button" onClick={openRechargeModal}>+</button>
           </div>
           <div className="resource">
-            <i className="material-icons">monetization_on</i>
+            <span className="resource-icon">🪙</span>
             <span className="resource-value">{user?.coins || 0}</span>
           </div>
         </div>
