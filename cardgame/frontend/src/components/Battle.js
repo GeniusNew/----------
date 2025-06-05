@@ -12,6 +12,7 @@ function Battle() {
   
   // 基础游戏状态
   const [gameStarted, setGameStarted] = useState(false);
+  const [battleStarted, setBattleStarted] = useState(false); // 新增状态，跟踪实际战斗是否开始
   const [gameEnded, setGameEnded] = useState(false);
   const [winner, setWinner] = useState(null);
   const [battleLog, setBattleLog] = useState([]);
@@ -139,9 +140,10 @@ function Battle() {
     setActiveEnemyCard(enemies[0]);
     
     // 重置游戏状态
-    setBattleLog([`战斗开始！${playerCards[0].name} 对阵 ${enemies[0].name}`]);
+    setBattleLog([`战斗准备开始！${playerCards[0].name} 将对阵 ${enemies[0].name}，请点击"攻击"按钮开始战斗。`]);
     setCurrentTurn('player');
     setGameStarted(true);
+    setBattleStarted(false); // 战斗尚未真正开始
     setGameEnded(false);
     setWinner(null);
   };
@@ -165,6 +167,12 @@ function Battle() {
   // 执行攻击
   const performAttack = () => {
     if (isAttacking || gameEnded || !activePlayerCard || !activeEnemyCard) return;
+    
+    // 如果这是第一次攻击，设置战斗已开始
+    if (!battleStarted) {
+      setBattleStarted(true);
+      setBattleLog(prev => [...prev, `战斗开始！${activePlayerCard.name} 对阵 ${activeEnemyCard.name}`]);
+    }
     
     setIsAttacking(true);
     
@@ -290,7 +298,7 @@ function Battle() {
     if (!gameStarted || gameEnded) return;
     
     // 如果开启自动战斗，或者是敌方回合，安排攻击
-    if (autoPlayEnabled || currentTurn === 'enemy') {
+    if ((autoPlayEnabled && battleStarted) || (currentTurn === 'enemy' && battleStarted)) {
       if (!isAttacking) {
         const delay = autoPlayEnabled ? gameSpeed : (currentTurn === 'enemy' ? 800 : 0);
         
@@ -306,7 +314,7 @@ function Battle() {
         clearTimeout(autoAttackTimerRef.current);
       }
     };
-  }, [gameStarted, gameEnded, currentTurn, autoPlayEnabled, isAttacking, gameSpeed]);
+  }, [gameStarted, gameEnded, currentTurn, autoPlayEnabled, isAttacking, gameSpeed, battleStarted]);
   
   // 玩家手动攻击
   const handlePlayerAttack = () => {
@@ -372,8 +380,8 @@ function Battle() {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
     
-    // 如果有活跃的卡片，绘制卡片和VS标志
-    if (activePlayerCard && activeEnemyCard) {
+    // 只有在战斗真正开始后才绘制卡牌
+    if (battleStarted && activePlayerCard && activeEnemyCard) {
       // 绘制中央VS
       ctx.save();
       ctx.font = 'bold 72px Impact';
@@ -431,6 +439,17 @@ function Battle() {
         ctx.stroke();
       }
       ctx.restore();
+    } else if (!battleStarted && gameStarted) {
+      // 显示"等待战斗开始"的提示
+      ctx.save();
+      ctx.font = 'bold 36px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.shadowColor = '#FFD700';
+      ctx.shadowBlur = 10;
+      ctx.fillText('点击"攻击"按钮开始战斗', width / 2, height / 2);
+      ctx.restore();
     }
     
     // 如果战斗结束，显示胜利/失败信息
@@ -449,7 +468,7 @@ function Battle() {
       );
       ctx.restore();
     }
-  }, [gameStarted, activePlayerCard, activeEnemyCard, currentTurn, gameEnded, winner, isAttacking]);
+  }, [gameStarted, activePlayerCard, activeEnemyCard, currentTurn, gameEnded, winner, isAttacking, battleStarted]);
   
   // 绘制单张卡牌
   const drawCard = (card, x, y, side) => {
