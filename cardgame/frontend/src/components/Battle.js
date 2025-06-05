@@ -55,27 +55,33 @@ function Battle() {
     '/images/cards/ex_card_2.png'
   ];
   
-  // 根据难度设置敌方数量
-  const getEnemyCount = (difficulty) => {
-    const counts = {
-      'easy': 3,
-      'normal': 5,
-      'hard': 8,
-      'expert': 10
-    };
-    return counts[difficulty] || 5; // 默认5个敌人
+  // 敌人类型定义
+  const enemyTypes = {
+    A: { health: 2500, attack: 250, name: '初级敌人', image: 0 },
+    B: { health: 12000, attack: 1200, name: '中级敌人', image: 1 },
+    C: { health: 22000, attack: 2500, name: '高级敌人', image: 2 },
+    D: { health: 40000, attack: 5000, name: '终极敌人', image: 3 }
   };
   
-  // 根据难度计算倍率
+  // 根据难度设置敌方数量和类型
+  const getEnemyCount = (difficulty) => {
+    switch(difficulty) {
+      case 'easy':
+        return 3;
+      case 'normal':
+        return 5;
+      case 'hard':
+        return 8;
+      case 'expert':
+        return 10;
+      default:
+        return 5;
+    }
+  };
+  
+  // 根据难度计算倍率 (不再需要这个函数，但保留它以避免修改其他代码)
   const getDifficultyMultiplier = (difficulty) => {
-    const values = {
-      'easy': 1,
-      'normal': 2,
-      'hard': 3,
-      'expert': 4
-    };
-    const d = values[difficulty] || 2;
-    return Math.log(d + 1);
+    return 1; // 现在直接使用预设值，忽略倍率
   };
   
   // 随机整数
@@ -105,28 +111,81 @@ function Battle() {
   // 生成敌人
   const generateEnemies = () => {
     const difficulty = dungeon.difficulty || 'normal';
-    const count = getEnemyCount(difficulty);
-    const multiplier = getDifficultyMultiplier(difficulty);
-    
     const enemies = [];
-    for (let i = 0; i < count; i++) {
-      const attack = Math.floor(getRandomInt(50, 500) * multiplier);
-      const defense = Math.floor(getRandomInt(100, 1000) * multiplier);
-      
-      enemies.push({
-        id: `enemy-${i}-${Date.now()}`,
-        name: getRandomItem(enemyNames),
-        image_url: getRandomItem(enemyImages),
-        attack: attack,
-        defense: defense,
-        health: defense,
-        maxHealth: defense,
-        isEnemy: true,
-        rarity: 'epic'
-      });
+    
+    // 根据难度设置敌人组成
+    switch(difficulty) {
+      case 'easy':
+        // 简单副本：3个A类敌人
+        for (let i = 0; i < 3; i++) {
+          addEnemy('A', i, enemies);
+        }
+        break;
+        
+      case 'normal':
+        // 普通副本：5个B类敌人
+        for (let i = 0; i < 5; i++) {
+          addEnemy('B', i, enemies);
+        }
+        break;
+        
+      case 'hard':
+        // 困难副本：3个B类 + 5个C类
+        for (let i = 0; i < 3; i++) {
+          addEnemy('B', i, enemies);
+        }
+        for (let i = 0; i < 5; i++) {
+          addEnemy('C', i + 3, enemies);
+        }
+        break;
+        
+      case 'expert':
+        // 专家副本：3个B类 + 6个C类 + 1个D类
+        for (let i = 0; i < 3; i++) {
+          addEnemy('B', i, enemies);
+        }
+        for (let i = 0; i < 6; i++) {
+          addEnemy('C', i + 3, enemies);
+        }
+        addEnemy('D', 9, enemies); // 最后一个是D类
+        break;
+        
+      default:
+        // 默认普通副本：5个B类敌人
+        for (let i = 0; i < 5; i++) {
+          addEnemy('B', i, enemies);
+        }
     }
     
     return enemies;
+  };
+  
+  // 添加特定类型的敌人
+  const addEnemy = (type, index, enemyArray) => {
+    const enemyType = enemyTypes[type];
+    const imageIndex = enemyType.image % enemyImages.length;
+    
+    // 为不同类型敌人随机选择不同的名称
+    const namePrefix = type === 'D' ? '史诗级' : 
+                      type === 'C' ? '精英' : 
+                      type === 'B' ? '强化' : '';
+    
+    // 基于类型选择合适的名称和图片
+    const randomNameIndex = getRandomInt(0, enemyNames.length - 1);
+    const name = `${namePrefix}${enemyNames[randomNameIndex]}`;
+    
+    enemyArray.push({
+      id: `enemy-${type}-${index}-${Date.now()}`,
+      name: name,
+      image_url: enemyImages[imageIndex],
+      attack: enemyType.attack,
+      defense: enemyType.health,
+      health: enemyType.health,
+      maxHealth: enemyType.health,
+      isEnemy: true,
+      rarity: type === 'D' ? 'legendary' : type === 'C' ? 'epic' : type === 'B' ? 'rare' : 'common',
+      type: type // 保存敌人类型信息，便于后续使用
+    });
   };
   
   // 开始游戏
