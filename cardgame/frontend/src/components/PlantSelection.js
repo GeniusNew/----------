@@ -208,8 +208,8 @@ function PlantSelection() {
       return;
     }
     
-    // 这里可以导航到战斗界面或者发送战斗请求
-    alert(`即将开始战斗！\n已选择 ${selectedCardCount} 张卡牌`);
+    // 导航到战斗界面并传递选中的卡牌
+    navigate('/battle', { state: { selectedCards: selectedCards.filter(card => card !== null), dungeon } });
   };
 
   // 返回副本选择

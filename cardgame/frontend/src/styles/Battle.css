@@ -1,0 +1,554 @@
+/* 战斗系统全局样式 */
+.battle-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #0f2027 100%);
+  color: white;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.battle-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="50" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 开始界面 */
+.battle-start-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #0f2027 100%);
+  color: white;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.battle-start-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(46, 125, 50, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.2) 0%, transparent 40%),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,215,0,0.3)"/><circle cx="75" cy="75" r="2" fill="rgba(255,215,0,0.2)"/><circle cx="50" cy="10" r="1.5" fill="rgba(255,255,255,0.2)"/><circle cx="10" cy="50" r="1" fill="rgba(255,255,255,0.2)"/><circle cx="90" cy="40" r="1.5" fill="rgba(255,255,255,0.2)"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+  pointer-events: none;
+  z-index: 1;
+}
+
+.battle-title-container {
+  text-align: center;
+  z-index: 2;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  border: 4px solid #DAA520;
+  box-shadow: 
+    0 0 30px rgba(218, 165, 32, 0.5),
+    inset 0 0 20px rgba(255, 215, 0, 0.3);
+  width: 80%;
+  max-width: 800px;
+}
+
+.battle-title {
+  color: #FFD700;
+  font-size: 4rem;
+  text-shadow: 
+    3px 3px 0px #8B4513,
+    5px 5px 10px rgba(0, 0, 0, 0.8);
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.battle-subtitle {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.battle-start-btn {
+  background: linear-gradient(145deg, 
+    #FF6347 0%, 
+    #FF4500 25%,
+    #FF6347 50%,
+    #FF4500 75%,
+    #FF6347 100%);
+  color: white;
+  border: 4px solid #DC143C;
+  padding: 20px 60px;
+  border-radius: 30px;
+  font-size: 1.8rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 
+    2px 2px 0px #8B0000,
+    3px 3px 6px rgba(0, 0, 0, 0.8);
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.battle-start-btn:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 
+    0 15px 30px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(255, 99, 71, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.battle-back-btn {
+  background: linear-gradient(145deg, #4682B4 0%, #1E90FF 50%, #4682B4 100%);
+  color: white;
+  border: 3px solid #00008B;
+  padding: 10px 30px;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 15px;
+}
+
+.battle-back-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(30, 144, 255, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+/* 游戏画布容器 */
+.battle-canvas-container {
+  flex: 1;
+  height: 100vh;
+  position: relative;
+}
+
+.battle-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* UI控制面板 */
+.battle-ui-panel, .enemy-ui-panel {
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.8) 0%, 
+    rgba(34, 34, 34, 0.8) 50%, 
+    rgba(0, 0, 0, 0.8) 100%);
+  padding: 20px;
+  box-shadow: 
+    5px 0 20px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  overflow-y: auto;
+}
+
+.battle-ui-panel {
+  border-right: 4px solid #DAA520;
+}
+
+.enemy-ui-panel {
+  border-left: 4px solid #DAA520;
+}
+
+.ui-panel-title {
+  color: #FFD700;
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-shadow: 
+    2px 2px 0px #000000,
+    3px 3px 6px rgba(0, 0, 0, 0.8);
+  border-bottom: 2px solid rgba(218, 165, 32, 0.5);
+  padding-bottom: 10px;
+}
+
+/* 剩余卡牌网格 */
+.remaining-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.remaining-card {
+  background: linear-gradient(145deg, 
+    rgba(34, 139, 34, 0.3) 0%,
+    rgba(85, 107, 47, 0.3) 50%,
+    rgba(34, 139, 34, 0.3) 100%);
+  border: 3px solid rgba(107, 142, 35, 0.5);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.remaining-card.enemy-card {
+  background: linear-gradient(145deg, 
+    rgba(139, 0, 0, 0.3) 0%,
+    rgba(178, 34, 34, 0.3) 50%,
+    rgba(139, 0, 0, 0.3) 100%);
+  border: 3px solid rgba(178, 34, 34, 0.5);
+}
+
+.remaining-card.active-card {
+  border-color: #FFD700;
+  box-shadow: 
+    0 0 15px rgba(255, 215, 0, 0.6),
+    inset 0 0 10px rgba(255, 215, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.remaining-card:hover {
+  transform: translateY(-4px);
+  border-color: #DAA520;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.card-order-number {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background: linear-gradient(145deg, #FF4500 0%, #FF0000 100%);
+  color: white;
+  border: 2px solid #DAA520;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.remaining-card img {
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #FFFFFF;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.remaining-card:hover img {
+  border-color: #FFD700;
+}
+
+.remaining-card .card-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.remaining-card .card-stats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 5px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.card-health {
+  color: #00FF00;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.card-attack {
+  color: #FF6347;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* 战斗控制按钮 */
+.battle-controls {
+  margin-top: auto;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.battle-exit-btn {
+  background: linear-gradient(145deg, #8B0000 0%, #DC143C 50%, #8B0000 100%);
+  color: white;
+  border: 3px solid #FF0000;
+  padding: 10px 25px;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.battle-exit-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(255, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+/* 战斗日志容器 */
+.battle-log-container {
+  margin-top: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid #DAA520;
+  border-radius: 10px;
+  padding: 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+}
+
+.battle-log-container h3 {
+  color: #FFD700;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  border-bottom: 1px solid rgba(218, 165, 32, 0.5);
+  padding-bottom: 5px;
+}
+
+.battle-log {
+  overflow-y: auto;
+  padding-right: 5px;
+  flex-grow: 1;
+}
+
+.log-entry {
+  margin-bottom: 8px;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #FFFFFF;
+}
+
+.log-entry:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  padding: 3px 5px;
+}
+
+/* 自动战斗控制 */
+.auto-battle-controls {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auto-battle-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.auto-battle-label input {
+  margin-right: 10px;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.speed-control span {
+  margin-right: 10px;
+  font-size: 0.9rem;
+}
+
+.speed-control input[type="range"] {
+  flex-grow: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: linear-gradient(90deg, #4CAF50, #FFC107);
+  border-radius: 5px;
+  outline: none;
+}
+
+.speed-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #FFD700;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* 攻击按钮 */
+.battle-attack-btn {
+  background: linear-gradient(145deg, #FF6347 0%, #DC143C 100%);
+  color: white;
+  border: 2px solid #FF0000;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}
+
+.battle-attack-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(255, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.battle-attack-btn:active {
+  transform: translateY(-2px);
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .battle-container {
+    flex-direction: column;
+  }
+  
+  .battle-ui-panel, .enemy-ui-panel {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-x: auto;
+  }
+  
+  .battle-ui-panel {
+    border-right: none;
+    border-bottom: 4px solid #DAA520;
+  }
+  
+  .enemy-ui-panel {
+    border-left: none;
+    border-top: 4px solid #DAA520;
+  }
+  
+  .ui-panel-title {
+    width: 100%;
+  }
+  
+  .remaining-cards-grid {
+    flex: 1;
+    margin-right: 15px;
+  }
+  
+  .battle-controls {
+    width: 150px;
+  }
+  
+  .battle-canvas-container {
+    height: 50vh;
+  }
+  
+  .battle-log-container {
+    width: 100%;
+    max-height: 150px;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .remaining-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .battle-controls {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .battle-ui-panel, .enemy-ui-panel {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .remaining-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 自定义滚动条 */
+.battle-ui-panel::-webkit-scrollbar {
+  width: 10px;
+}
+
+.battle-ui-panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.battle-ui-panel::-webkit-scrollbar-thumb {
+  background: linear-gradient(145deg, #8B4513, #A0522D);
+  border-radius: 5px;
+}
+
+.battle-ui-panel::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(145deg, #DAA520, #CD853F);
+} 
