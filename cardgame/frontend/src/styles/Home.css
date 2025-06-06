@@ -575,4 +575,369 @@
   .news-date {
     margin-bottom: 5px;
   }
+}
+
+/* 二次元风格充值界面样式 */
+.anime-recharge-modal {
+  background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+  border-radius: 16px;
+  padding: 0;
+  width: 90%;
+  max-width: 550px;
+  color: white;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  position: relative;
+  animation: modalFadeIn 0.5s ease-out;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  background: linear-gradient(90deg, #614385 0%, #516395 100%);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #FFFFFF;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.close-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.anime-content {
+  padding: 20px;
+}
+
+.gem-illustration {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.gem-image {
+  max-width: 120px;
+  animation: gemShine 2s infinite alternate;
+}
+
+@keyframes gemShine {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+  }
+}
+
+.recharge-description {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0 20px;
+  line-height: 1.4;
+}
+
+.anime-recharge-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.anime-recharge-option {
+  position: relative;
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.anime-recharge-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.option-icon {
+  font-size: 2rem;
+  margin-right: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.option-content {
+  flex: 1;
+}
+
+.option-gems {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.option-price {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.option-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  20%, 100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+/* 密码输入页面样式 */
+.anime-password-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.selected-package {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.selected-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  margin-right: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.selected-details {
+  flex: 1;
+}
+
+.selected-gems {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  color: white;
+}
+
+.selected-price {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.password-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.anime-password-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.anime-password-digit {
+  width: 40px;
+  height: 50px;
+  font-size: 1.5rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.anime-password-digit:focus {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.anime-error-message {
+  color: #ff6b6b;
+  margin: 10px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.anime-password-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.anime-back-button, .anime-confirm-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.anime-back-button {
+  background: linear-gradient(135deg, #2c3e50 0%, #4a5568 100%);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.anime-back-button:hover {
+  background: linear-gradient(135deg, #34495e 0%, #576574 100%);
+  transform: translateY(-2px);
+}
+
+.anime-confirm-button {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  color: #2d3748;
+  border: none;
+  box-shadow: 0 4px 15px rgba(253, 160, 133, 0.4);
+}
+
+.anime-confirm-button:hover {
+  background: linear-gradient(135deg, #f6d365 0%, #ff9f7f 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(253, 160, 133, 0.6);
+}
+
+.anime-confirm-button:disabled {
+  background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+  color: #4a5568;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 响应式样式 */
+@media (max-width: 768px) {
+  .anime-recharge-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .anime-password-digit {
+    width: 35px;
+    height: 45px;
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .anime-password-inputs {
+    gap: 5px;
+  }
+  
+  .anime-password-digit {
+    width: 30px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  
+  .anime-password-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .anime-back-button, .anime-confirm-button {
+    width: 100%;
+    max-width: 200px;
+  }
 } 

@@ -16,17 +16,20 @@ function Home() {
   const [showRecharge, setShowRecharge] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [passwordInputs, setPasswordInputs] = useState(['', '', '', '', '', '']);
+  const [activeInputIndex, setActiveInputIndex] = useState(0);
 
   // 充值选项
   const rechargeOptions = [
-    { amount: 60, gems: 60, label: '60钻石', price: '￥6' },
-    { amount: 300, gems: 330, label: '300+30钻石', price: '￥30' },
-    { amount: 980, gems: 1080, label: '980+100钻石', price: '￥98' },
-    { amount: 1980, gems: 2280, label: '1980+300钻石', price: '￥198' },
-    { amount: 3280, gems: 3880, label: '3280+600钻石', price: '￥328' },
-    { amount: 6480, gems: 7980, label: '6480+1500钻石', price: '￥648' }
+    { amount: 60, gems: 60, label: '60钻石', price: '￥6', icon: <i className="fas fa-gem"></i>, bgColor: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)' },
+    { amount: 300, gems: 330, label: '300+30钻石', price: '￥30', icon: <i className="fas fa-gem"></i>, bgColor: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+    { amount: 980, gems: 1080, label: '980+100钻石', price: '￥98', icon: <i className="fas fa-gem"></i>, bgColor: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' },
+    { amount: 1980, gems: 2280, label: '1980+300钻石', price: '￥198', icon: <i className="fas fa-gem"></i>, bgColor: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
+    { amount: 3280, gems: 3880, label: '3280+600钻石', price: '￥328', icon: <i className="fas fa-gem"></i>, bgColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+    { amount: 6480, gems: 7980, label: '6480+1500钻石', price: '￥648', icon: <i className="fas fa-gem"></i>, bgColor: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)' }
   ];
 
   // 当组件挂载时，检查用户登录状态
@@ -130,14 +133,44 @@ function Home() {
     setShowRecharge(false);
     setShowPasswordModal(false);
     setSelectedAmount(0);
+    setSelectedOption(null);
     setPassword('');
     setPasswordError('');
+    setPasswordInputs(['', '', '', '', '', '']);
+    setActiveInputIndex(0);
   };
 
   // 选择充值金额
-  const selectRechargeAmount = (gems) => {
-    setSelectedAmount(gems);
+  const selectRechargeAmount = (option) => {
+    setSelectedAmount(option.gems);
+    setSelectedOption(option);
     setShowPasswordModal(true);
+  };
+
+  // 处理密码输入
+  const handlePasswordInput = (e, index) => {
+    const value = e.target.value;
+    if (value === '' || /^\d$/.test(value)) {
+      const newInputs = [...passwordInputs];
+      newInputs[index] = value;
+      setPasswordInputs(newInputs);
+      
+      // 更新完整密码
+      const newPassword = newInputs.join('');
+      setPassword(newPassword);
+      
+      // 自动聚焦下一个输入框
+      if (value !== '' && index < 5) {
+        setActiveInputIndex(index + 1);
+      }
+    }
+  };
+
+  // 处理密码输入框的键盘事件
+  const handlePasswordKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && passwordInputs[index] === '' && index > 0) {
+      setActiveInputIndex(index - 1);
+    }
   };
 
   // 验证密码并充值
@@ -181,6 +214,9 @@ function Home() {
       }
     } else {
       setPasswordError('密码错误，请重试');
+      // 清空密码输入
+      setPasswordInputs(['', '', '', '', '', '']);
+      setActiveInputIndex(0);
     }
   };
 
@@ -210,17 +246,17 @@ function Home() {
         </div>
         <div className="resources">
           <div className="resource">
-            <span className="resource-icon">💎</span>
+            <span className="resource-icon"><i className="fas fa-gem"></i></span>
             <span className="resource-value">{user?.gems || 0}</span>
             <button className="recharge-button" onClick={openRechargeModal}>+</button>
           </div>
           <div className="resource">
-            <span className="resource-icon">🪙</span>
+            <span className="resource-icon"><i className="fas fa-coins"></i></span>
             <span className="resource-value">{user?.coins || 0}</span>
           </div>
         </div>
         <button className="settings-button" onClick={() => setShowSettings(!showSettings)}>
-          ⚙️ 设置
+          <i className="fas fa-cog"></i> 设置
         </button>
         <button onClick={handleLogout} className="logout-button">
           退出
@@ -232,19 +268,19 @@ function Home() {
         {/* 功能按钮区 */}
         <div className="feature-buttons">
           <button className="feature-button card-pool" onClick={goToCardPool}>
-            <div className="button-icon">🎴</div>
+            <div className="button-icon"><i className="fas fa-clone"></i></div>
             <div className="button-text">卡池</div>
           </button>
           <button className="feature-button inventory" onClick={goToInventory}>
-            <div className="button-icon">📦</div>
+            <div className="button-icon"><i className="fas fa-box-open"></i></div>
             <div className="button-text">仓库</div>
           </button>
           <button className="feature-button quest" onClick={goToDungeons}>
-            <div className="button-icon">🏆</div>
+            <div className="button-icon"><i className="fas fa-trophy"></i></div>
             <div className="button-text">副本</div>
           </button>
           <button className="feature-button shop" onClick={goToShop}>
-            <div className="button-icon">🛒</div>
+            <div className="button-icon"><i className="fas fa-shopping-cart"></i></div>
             <div className="button-text">商店</div>
           </button>
         </div>
@@ -278,40 +314,94 @@ function Home() {
       {/* 充值界面 */}
       {showRecharge && (
         <div className="modal-overlay">
-          <div className="recharge-modal">
-            <h2>钻石充值</h2>
+          <div className="anime-recharge-modal">
+            <div className="modal-header">
+              <h2>钻石充值</h2>
+              <button onClick={closeRechargeModal} className="close-button">
+                <span className="close-icon">×</span>
+              </button>
+            </div>
+            
             {!showPasswordModal ? (
-              <div className="recharge-options">
-                {rechargeOptions.map((option, index) => (
-                  <div 
-                    key={index} 
-                    className="recharge-option" 
-                    onClick={() => selectRechargeAmount(option.gems)}
-                  >
-                    <div className="option-gems">{option.label}</div>
-                    <div className="option-price">{option.price}</div>
-                  </div>
-                ))}
+              <div className="anime-content">
+                <div className="gem-illustration">
+                  <img src="/images/anime-gems.png" alt="钻石" className="gem-image" 
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNTAgMTBMOTAgNTAgNTAgOTAgMTAgNTB6IiBzdHJva2U9IiM4ODhmZmYiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0iIzY2NmZmZiIvPjwvc3ZnPg==';
+                    }}
+                  />
+                </div>
+                <div className="recharge-description">
+                  <p>购买钻石可以用于抽取稀有卡牌和购买游戏内道具！现在充值还有额外赠送！</p>
+                </div>
+                <div className="anime-recharge-options">
+                  {rechargeOptions.map((option, index) => (
+                    <div 
+                      key={index} 
+                      className="anime-recharge-option" 
+                      onClick={() => selectRechargeAmount(option)}
+                      style={{ background: option.bgColor }}
+                    >
+                      <div className="option-icon">{option.icon}</div>
+                      <div className="option-content">
+                        <div className="option-gems">{option.label}</div>
+                        <div className="option-price">{option.price}</div>
+                      </div>
+                      <div className="option-shine"></div>
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : (
-              <div className="password-container">
-                <p>请输入支付密码确认充值 {selectedAmount} 钻石</p>
-                <input 
-                  type="password" 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="请输入支付密码"
-                  className="password-input"
-                  maxLength={6}
-                />
-                {passwordError && <p className="error-message">{passwordError}</p>}
-                <div className="password-buttons">
-                  <button onClick={verifyPasswordAndRecharge} className="confirm-button">确认支付</button>
-                  <button onClick={() => setShowPasswordModal(false)} className="back-button">返回</button>
+              <div className="anime-password-container">
+                <div className="selected-package">
+                  <div className="selected-icon" style={{ background: selectedOption?.bgColor }}>{selectedOption?.icon}</div>
+                  <div className="selected-details">
+                    <p className="selected-gems">{selectedOption?.label}</p>
+                    <p className="selected-price">{selectedOption?.price}</p>
+                  </div>
+                </div>
+                
+                <div className="password-title">
+                  <p>请输入支付密码确认充值</p>
+                </div>
+                
+                <div className="anime-password-inputs">
+                  {passwordInputs.map((value, index) => (
+                    <input
+                      key={index}
+                      type="password"
+                      maxLength="1"
+                      className="anime-password-digit"
+                      value={value}
+                      onChange={(e) => handlePasswordInput(e, index)}
+                      onKeyDown={(e) => handlePasswordKeyDown(e, index)}
+                      ref={el => {
+                        if (el && index === activeInputIndex) {
+                          el.focus();
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+                
+                {passwordError && <p className="anime-error-message">{passwordError}</p>}
+                
+                <div className="anime-password-buttons">
+                  <button onClick={() => setShowPasswordModal(false)} className="anime-back-button">
+                    返回
+                  </button>
+                  <button 
+                    onClick={verifyPasswordAndRecharge} 
+                    className="anime-confirm-button"
+                    disabled={password.length !== 6}
+                  >
+                    确认支付
+                  </button>
                 </div>
               </div>
             )}
-            <button onClick={closeRechargeModal} className="close-button">关闭</button>
           </div>
         </div>
       )}
